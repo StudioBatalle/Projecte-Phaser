@@ -17,7 +17,7 @@ function create()
 	Bombas.call(this);
 	PlayerProp.call(this);
 	DollProp.call(this);
-	PocionProp.call(this);
+	InventarioProp.call(this);
 	Teclas.call(this);
 
 	this.physics.add.overlap(fire, DollGroup, destroyEnemy, null, this);
@@ -67,20 +67,21 @@ function Bombas()
 	tiempoF = 75;
 }
 
-function PocionProp()
+function InventarioProp()
 {
-	PocionList = this.physics.add.group();
+	InvetarioList = this.physics.add.group();
 
-	pociones = new Array();
+	inventario = new Array();
 
 	for (var i = 0; i < 4; i++)
 	{
-		pociones[i] = PocionList.create(game.config.width - 50, 0, "pocion" + i);
-		pociones[i].setOrigin(0.5, 0);
-		pociones[i].visible = false;
-		pociones[i].setScale(0.5, 0.5);
-		pociones[i].tiempo = 100;
+		inventario[i] = InvetarioList.create(game.config.width - 50, 0, "pocion" + i);
+		inventario[i].setOrigin(0.5, 0);
+		inventario[i].visible = false;
+		inventario[i].setScale(0.5, 0.5);
 	}
+
+	objetoActivo = 0;
 }
 
 function Teclas()
@@ -129,7 +130,7 @@ function update()
 	textos();
 	CommandMov();
 	CommandBomb();
-	CommandPociones();
+	Commandinventario();
 	Stamina();
 	destroyFire();
 }
@@ -248,17 +249,15 @@ function destroyFire()
 	}
 }
 
-var i = 0;
-
-function CommandPociones()
+function Commandinventario()
 {
-	switch (i)
+	switch (objetoActivo)
 	{
 		case 0:
 			if (Phaser.Input.Keyboard.JustDown(KeyE))
 			{
-				pociones[i].visible = false;
-				i+=1;
+				inventario[objetoActivo].visible = false;
+				objetoActivo+=1;
 			}
 			if (Phaser.Input.Keyboard.JustDown(KeyQ))
 			{
@@ -275,8 +274,8 @@ function CommandPociones()
 		case 1:
 			if (Phaser.Input.Keyboard.JustDown(KeyE))
 			{
-				pociones[i].visible = false;
-				i+=1;
+				inventario[objetoActivo].visible = false;
+				objetoActivo+=1;
 			}
 			if (Phaser.Input.Keyboard.JustDown(KeyQ))
 			{
@@ -286,8 +285,8 @@ function CommandPociones()
 		case 2:
 			if (Phaser.Input.Keyboard.JustDown(KeyE))
 			{
-				pociones[i].visible = false;
-				i+=1;
+				inventario[objetoActivo].visible = false;
+				objetoActivo+=1;
 			}
 			if (Phaser.Input.Keyboard.JustDown(KeyQ))
 			{
@@ -297,13 +296,13 @@ function CommandPociones()
 		case 3:
 			if (Phaser.Input.Keyboard.JustDown(KeyE))
 			{
-				pociones[i].visible = false;
-				i = 0;
+				inventario[objetoActivo].visible = false;
+				objetoActivo = 0;
 			}
 		break;
 	}
 
-	pociones[i].visible = true;
+	inventario[objetoActivo].visible = true;
 }
 
 function Fondo()
