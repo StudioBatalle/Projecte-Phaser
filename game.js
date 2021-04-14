@@ -299,6 +299,10 @@ function Commandinventario()
 				inventario[objetoActivo].visible = false;
 				objetoActivo = 0;
 			}
+			if (Phaser.Input.Keyboard.JustDown(KeyQ))
+			{
+				recuperacion/=2;
+			}
 		break;
 	}
 
