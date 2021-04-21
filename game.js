@@ -19,14 +19,10 @@ function create()
 	DollProp.call(this);
 	InventarioProp.call(this);
 	Teclas.call(this);
+	Textos.call(this);
 
 	this.physics.add.overlap(fire, DollGroup, destroyEnemy, null, this);
-
-	textoCD = this.add.text(16, 16, "Cooldown: ", {fontsize:"32px", fill: "#fff"});
-	textoT = this.add.text(16, 16 * 2, "Destroy Bomb: ", {fontsize:"32px", fill: "#fff"});
-	textoST = this.add.text(16, 16 * 3, "Aguante: ", {fontsize:"32px", fill: "#fff"});
-	textoCDST = this.add.text(16, 16 * 4, "Recuperacion: ", {fontsize:"32px", fill: "#fff"});
-	textoPV = this.add.text(16, 16 * 5, "Vida: ", {fontsize:"32px", fill: "#fff"});
+	this.time.addEvent({ delay: 1000, callback: cronometro, callbackScope: this, loop: true });
 }
 
 function PlayerProp()
@@ -35,17 +31,22 @@ function PlayerProp()
 	player.setOrigin(0.5, 0.5);
 	player.setScale(0.35, 0.35);
 
-	player.vida = 5;
-	player.resistencia = 2;
-	player.damage = 2;
-	player.aguante = 250;
+	//Para controlar mejor las estadisticas y asi poder mejorarlas cuando se pase el primer nivel
+
+	vidaMax = 10;
+	resistenciaMax = 2;
+	damageMax = 2;
+	aguanteMax = 150;
+
+	player.vida = vidaMax / 2; //Estadistica cambiada para visualizar el efecto de pocion
+	player.resistencia = resistenciaMax;
+	player.damage = damageMax;
+	player.aguante = aguanteMax;
 
 	vel = 3;
 	velS = vel;
-	recuperacion = player.aguante;
-
-	//dirV = new Phaser.Math.Vector2(1, 0);
-	//dirH = new Phaser.Math.Vector2(0, 1);
+	recuperacion = false;
+	timeRecuperacion = 15;
 }
 
 function Bombas()
@@ -61,10 +62,10 @@ function Bombas()
 	fire.visible = false;
 	fire.damage = 15;
 
-	cooldown = 150;
-	tiempoB = 100;
-	Bactiva = 0;
-	tiempoF = 75;
+	cooldown = 25;
+	tiempoB = 2;
+	Bactiva = false;
+	tiempoF = 5;
 }
 
 function InventarioProp()
@@ -82,6 +83,8 @@ function InventarioProp()
 	}
 
 	objetoActivo = 0;
+	EfectoActivo = false;
+	timeEfecto = 0;
 }
 
 function Teclas()
@@ -93,7 +96,7 @@ function Teclas()
 	KeyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
 	KeyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 	BombT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-	Sprint = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
+	Sprint = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
 }
 
 function DollProp()
@@ -124,15 +127,81 @@ function destroyEnemy(f, d)
 		DollGroup.remove(d);
 	}
 }
+
+function cronometro()
+{
+	//Control de los efectos de pocion
+
+	if(EfectoActivo)
+	{
+		timeEfecto++;
+
+		if (timeEfecto == 15)
+		{
+			player.damage = damageMax;
+			player.resistencia = resistenciaMax;
+			timeEfecto = 0;
+			EfectoActivo = false;
+		}
+	}
+
+	//Control del aguante
+
+	if (recuperacion)
+	{
+		timeRecuperacion--; 
+
+		if (timeRecuperacion == 0)
+		{
+			player.aguante = aguanteMax;
+			timeRecuperacion = 15;
+			recuperacion = false;
+		}
+	}
+
+	if (Bactiva)
+	{
+		tiempoB--;
+	}
+	else if (cooldown > 0)
+	{
+		cooldown--;	
+	}
+
+	//Destruye la explosion
+
+	if (fire.visible)
+	{
+		tiempoF--;
+
+		if (tiempoF < 0)
+		{
+			tiempoF = 5;
+			fire.visible = false;
+		}
+	}
+}
+
+function Textos()
+{
+	textoCD = this.add.text(16, 16, "Cooldown: ", {fontsize:"32px", fill: "#fff"});
+	textoT = this.add.text(16, 16 * 2, "Destroy Bomb: ", {fontsize:"32px", fill: "#fff"});
+	textoST = this.add.text(16, 16 * 3, "Aguante: ", {fontsize:"32px", fill: "#fff"});
+	textoCDST = this.add.text(16, 16 * 4, "Recuperacion: ", {fontsize:"32px", fill: "#fff"});
+	textoPV = this.add.text(16, 16 * 5, "Vida: ", {fontsize:"32px", fill: "#fff"});
+	textoPR = this.add.text(16, 16 * 6, "Resistencia: ", {fontsize:"32px", fill: "#fff"});
+	textoPD = this.add.text(16, 16 * 7, "Danyo: ", {fontsize:"32px", fill: "#fff"});
+	textoTE = this.add.text(16, 16 * 8, "tiempo efecto: ", {fontsize:"32px", fill: "#fff"});
+	textoTR = this.add.text(16, 16 * 9, "tiempo recuperacion: ", {fontsize:"32px", fill: "#fff"});
+}
 	
 function update()
 {	
-	textos();
+	textosUpdate();
 	CommandMov();
 	CommandBomb();
 	Commandinventario();
 	Stamina();
-	destroyFire();
 }
 
 function Stamina()
@@ -142,20 +211,13 @@ function Stamina()
 	switch (player.aguante)
 	{
 		case 0:
-			recuperacion--;
-
-			if (recuperacion == 0)
-				{
-					player.aguante = 250;
-					recuperacion = player.aguante;
-				}
+			recuperacion = true;
 		break;
 		default:
-
-			if (player.aguante < 250 && Sprint.isUp)
-			{
-				player.aguante++;
-			}
+		if (player.aguante < aguanteMax && Sprint.isUp)
+		{
+			player.aguante++;
+		}
 	}
 }
 
@@ -176,20 +238,31 @@ function CommandMov()
 	//Control de movimiento
 
 	if (KeyA.isDown)
-	{
-		player.x-=velS;
-	}
-    else if (KeyD.isDown)
-	{
-		player.x+=velS;
-	}
+	{ player.x-=velS; }
+	else if (KeyD.isDown)
+	{ player.x+=velS; }
+
 	if (KeyW.isDown)
 	{
 		player.y-=velS;
+
+		if (KeyA.isDown)
+		{ 
+			//Condiciones para diagonales, si se necesita en especifico que este moviendose en diagonal 
+		}
+		else if (KeyD.isDown)
+		{ }
 	}
 	else if (KeyS.isDown)
 	{
 		player.y+=velS;
+
+		if (KeyA.isDown)
+		{
+			//Condiciones para diagonales, si se necesita en especifico que este moviendose en diagonal
+		}
+		else if (KeyD.isDown)
+		{ }
 	}
 }
 
@@ -200,8 +273,8 @@ function CommandBomb()
 		bomb.x = player.x;
 		bomb.y = player.y;
 		bomb.visible = true;
-		cooldown = 150;
-		Bactiva = 1;
+		cooldown = 25;
+		Bactiva = true;
 
 		if (player.aguante <= 75)
 		{
@@ -213,21 +286,11 @@ function CommandBomb()
 		}
 	}
 
-	if(cooldown > 0)
-	{
-		cooldown--;
-	}
-
-	if (Bactiva == 1)
-	{
-		tiempoB--;
-	}
-
 	if (tiempoB < 0)
 	{
 		bomb.visible = false;
-		Bactiva = 0;
-		tiempoB = 100;
+		Bactiva = false;
+		tiempoB = 2;
 
 		fire.x = bomb.x;
 		fire.y = bomb.y;
@@ -235,73 +298,64 @@ function CommandBomb()
 	}
 }
 
-function destroyFire()
-{
-	if(fire.visible == true)
-	{
-		tiempoF--;
-
-		if (tiempoF < 0)
-		{
-			tiempoF = 75;
-			fire.visible = false;
-		}
-	}
-}
-
 function Commandinventario()
 {
+	var JustDown = Phaser.Input.Keyboard.JustDown;
+
 	switch (objetoActivo)
 	{
 		case 0:
-			if (Phaser.Input.Keyboard.JustDown(KeyE))
+			if (JustDown(KeyE))
 			{
 				inventario[objetoActivo].visible = false;
 				objetoActivo+=1;
 			}
-			if (Phaser.Input.Keyboard.JustDown(KeyQ))
+			if (JustDown(KeyQ) && player.vida < vidaMax)
 			{
-				if (player.vida == 9)
-				{
-					player.vida+=1;
-				}
-				else if (player.vida <= 8)
-				{
-					player.vida+= 2;
-				}
+				player.vida+=1;
 			}
 		break;
 		case 1:
-			if (Phaser.Input.Keyboard.JustDown(KeyE))
+			if (JustDown(KeyE))
 			{
 				inventario[objetoActivo].visible = false;
 				objetoActivo+=1;
 			}
-			if (Phaser.Input.Keyboard.JustDown(KeyQ))
+			if (JustDown(KeyQ))
 			{
-				player.resistencia*=2;
+				if (EfectoActivo == false)
+				{
+					player.resistencia*=2;
+					EfectoActivo = true;
+				}
 			}
 		break;
 		case 2:
-			if (Phaser.Input.Keyboard.JustDown(KeyE))
+			if (JustDown(KeyE))
 			{
 				inventario[objetoActivo].visible = false;
 				objetoActivo+=1;
 			}
-			if (Phaser.Input.Keyboard.JustDown(KeyQ))
+			if (JustDown(KeyQ))
 			{
-				player.damage*=2;
+				if (EfectoActivo == false)
+				{
+					player.damage*=2;
+					EfectoActivo = true;
+				}
 			}
 		break;
 		case 3:
-			if (Phaser.Input.Keyboard.JustDown(KeyE))
+			if (JustDown(KeyE))
 			{
 				inventario[objetoActivo].visible = false;
 				objetoActivo = 0;
 			}
-			if (Phaser.Input.Keyboard.JustDown(KeyQ))
+			if (JustDown(KeyQ))
 			{
-				recuperacion/=2;
+				player.aguante+=50;
+				recuperacion = false;
+				timeRecuperacion = 15;
 			}
 		break;
 	}
@@ -316,13 +370,17 @@ function Fondo()
 	fondo.setOrigin(0, 0);
 }
 
-function textos()
+function textosUpdate()
 {
 	textoCD.text = "Cooldown: " + cooldown;
 	textoT.text = "Destroy Bomb: " + tiempoB;
 	textoST.text = "Aguante: " + player.aguante;
 	textoCDST.text = "Recuperacion: " + recuperacion;
 	textoPV.text = "Vida: " + player.vida;
+	textoPR.text = "Resistencia: " + player.resistencia;
+	textoPD.text = "Danyo: " + player.damage;
+	textoTE.text = "tiempo efecto: " + timeEfecto;
+	textoTR.text = "tiempo recuperacion: " + timeRecuperacion;
 }
 
 var config = {
@@ -335,6 +393,10 @@ var config = {
             gravity: {y:0}
         }
     },
+    fps: {
+	target: 120,
+	forceSetTimeOut: true
+	},
     scene: {
         preload:preload,
         create:create,
