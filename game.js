@@ -18,7 +18,7 @@ class Example extends Phaser.Scene {
 		this.load.spritesheet('aguante', 'assets/aguante.png', { frameWidth: 160, frameHeight: 160 });
 	}
 	create() {
-     
+  
 		//  Camara
 		this.cameras.main.setBounds(-0, -0, 1535, 960);
 		this.physics.world.setBounds(-0, -0, 1535, 960);
