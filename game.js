@@ -1,397 +1,518 @@
-function preload()
-{
-	this.load.image("sky","assets/images/background.jpg");
-	this.load.image("avatar","assets/images/hero.png");
-	this.load.image("doll","assets/images/npc.png");
-	this.load.image("fire","assets/images/exp.png");
-	this.load.image("bomb","assets/images/bomb.png");
-	this.load.image("pocion0","assets/images/pocionRed.png");
-	this.load.image("pocion1","assets/images/pocionGreen.png");
-	this.load.image("pocion2","assets/images/pocionYellow.png");
-	this.load.image("pocion3","assets/images/pocionBlue.png");
-}
-
-function create()
-{
-	Fondo.call(this);
-	Bombas.call(this);
-	PlayerProp.call(this);
-	DollProp.call(this);
-	InventarioProp.call(this);
-	Teclas.call(this);
-	Textos.call(this);
-
-	this.physics.add.overlap(fire, DollGroup, destroyEnemy, null, this);
-	this.time.addEvent({ delay: 1000, callback: cronometro, callbackScope: this, loop: true });
-}
-
-function PlayerProp()
-{
-	player = this.add.sprite(0, 0, "avatar");
-	player.setOrigin(0.5, 0.5);
-	player.setScale(0.35, 0.35);
-
-	//Para controlar mejor las estadisticas y asi poder mejorarlas cuando se pase el primer nivel
-
-	vidaMax = 10;
-	resistenciaMax = 2;
-	damageMax = 2;
-	aguanteMax = 150;
-
-	player.vida = vidaMax / 2; //Estadistica cambiada para visualizar el efecto de pocion
-	player.resistencia = resistenciaMax;
-	player.damage = damageMax;
-	player.aguante = aguanteMax;
-
-	vel = 3;
-	velS = vel;
-	recuperacion = false;
-	timeRecuperacion = 15;
-}
-
-function Bombas()
-{
-	bomb = this.physics.add.sprite(0, 0, "bomb");
-	bomb.setOrigin(0.5, 0.5);
-	bomb.setScale(0.15, 0.15);
-	bomb.visible = false;
-
-	fire = this.physics.add.sprite(0, 0, "fire");
-	fire.setOrigin(0.5, 0.5);
-	fire.setScale(1.35, 1.35);
-	fire.visible = false;
-	fire.damage = 15;
-
-	cooldown = 25;
-	tiempoB = 2;
-	Bactiva = false;
-	tiempoF = 5;
-}
-
-function InventarioProp()
-{
-	InvetarioList = this.physics.add.group();
-
-	inventario = new Array();
-
-	for (var i = 0; i < 4; i++)
-	{
-		inventario[i] = InvetarioList.create(game.config.width - 50, 0, "pocion" + i);
-		inventario[i].setOrigin(0.5, 0);
-		inventario[i].visible = false;
-		inventario[i].setScale(0.5, 0.5);
+var mirandoderecha;
+var iaguante;
+var ivida;
+var KeyJ
+var KeyK
+class Example extends Phaser.Scene {
+	constructor() {
+		super();
+		this.moveCam = false;
 	}
-
-	objetoActivo = 0;
-	EfectoActivo = false;
-	timeEfecto = 0;
-}
-
-function Teclas()
-{
-	KeyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-	KeyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-	KeyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-	KeyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-	KeyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
-	KeyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-	BombT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-	Sprint = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
-}
-
-function DollProp()
-{
-	DollGroup = this.physics.add.group();
-
-	dolls = new Array();
-
-	for (var i = 0; i < 10; i++)
-	{
-		dolls[i] = DollGroup.create(Phaser.Math.Between(game.config.width, 0), Phaser.Math.Between(game.config.height, 0), "doll");
-		dolls[i].setOrigin(0.5, 0.5);
-		dolls[i].setScale(0.15, 0.15);
-		dolls[i].life = 1000;
+	preload() {
+		//mapa
+		this.load.image('bg', 'assets/testmap.png');
+		//jugador
+		this.load.spritesheet('player', 'assets/player.png', { frameWidth: 32, frameHeight: 32 });
+		//indicadores
+		this.load.spritesheet('vida', 'assets/vida.png', { frameWidth: 160, frameHeight: 160 });
+		this.load.spritesheet('aguante', 'assets/aguante.png', { frameWidth: 160, frameHeight: 160 });
 	}
-}
+	create() {
 
-function destroyEnemy(f, d)
-{
-	if (f.visible == true)
-	{
-		d.life = d.life - f.damage;
-	}
-
-	if (d.life < 0)
-	{
-		d.disableBody(true, true);
-		DollGroup.remove(d);
-	}
-}
-
-function cronometro()
-{
-	//Control de los efectos de pocion
-
-	if(EfectoActivo)
-	{
-		timeEfecto++;
-
-		if (timeEfecto == 15)
-		{
-			player.damage = damageMax;
-			player.resistencia = resistenciaMax;
-			timeEfecto = 0;
-			EfectoActivo = false;
+		//  Camara
+		this.cameras.main.setBounds(-0, -0, 1535, 960);
+		this.physics.world.setBounds(-0, -0, 1535, 960);
+		this.add.image(0, 0, 'bg').setOrigin(0);
+		
+		//teclas
+		KeyJ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
+		KeyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
+		this.cursors = this.input.keyboard.createCursorKeys();
+		this.cameras.main.setDeadzone(400, 200);
+		//this.cameras.main.setZoom(0.5);
+		if (this.cameras.main.deadzone) {
+			const graphics = this.add.graphics().setScrollFactor(0);
+			graphics.lineStyle(2, 0x00ff00, 1);
+			graphics.strokeRect(200, 200, this.cameras.main.deadzone.width, this.cameras.main.deadzone.height);
 		}
-	}
+		this.text = this.add.text(32, 32).setScrollFactor(0).setFontSize(32).setColor('#ffffff');
 
-	//Control del aguante
 
-	if (recuperacion)
-	{
-		timeRecuperacion--; 
-
-		if (timeRecuperacion == 0)
-		{
-			player.aguante = aguanteMax;
-			timeRecuperacion = 15;
-			recuperacion = false;
-		}
-	}
-
-	if (Bactiva)
-	{
-		tiempoB--;
-	}
-	else if (cooldown > 0)
-	{
-		cooldown--;	
-	}
-
-	//Destruye la explosion
-
-	if (fire.visible)
-	{
-		tiempoF--;
-
-		if (tiempoF < 0)
-		{
-			tiempoF = 5;
-			fire.visible = false;
-		}
-	}
-}
-
-function Textos()
-{
-	textoCD = this.add.text(16, 16, "Cooldown: ", {fontsize:"32px", fill: "#fff"});
-	textoT = this.add.text(16, 16 * 2, "Destroy Bomb: ", {fontsize:"32px", fill: "#fff"});
-	textoST = this.add.text(16, 16 * 3, "Aguante: ", {fontsize:"32px", fill: "#fff"});
-	textoCDST = this.add.text(16, 16 * 4, "Recuperacion: ", {fontsize:"32px", fill: "#fff"});
-	textoPV = this.add.text(16, 16 * 5, "Vida: ", {fontsize:"32px", fill: "#fff"});
-	textoPR = this.add.text(16, 16 * 6, "Resistencia: ", {fontsize:"32px", fill: "#fff"});
-	textoPD = this.add.text(16, 16 * 7, "Danyo: ", {fontsize:"32px", fill: "#fff"});
-	textoTE = this.add.text(16, 16 * 8, "tiempo efecto: ", {fontsize:"32px", fill: "#fff"});
-	textoTR = this.add.text(16, 16 * 9, "tiempo recuperacion: ", {fontsize:"32px", fill: "#fff"});
-}
+		//jugador
+		this.player = this.physics.add.sprite(400, 300, 'player');
+		this.player.setCollideWorldBounds(true);
+		this.cameras.main.startFollow(this.player, true);
+		this.anims.create({
+			key: 'idler',
+			frames: this.anims.generateFrameNumbers('player', { start: 0, end: 2 }),
+			frameRate: 5,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'idlel',
+			frames: this.anims.generateFrameNumbers('player', { start: 13, end: 15 }),
+			frameRate: 5,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'right',
+			frames: this.anims.generateFrameNumbers('player', { start: 0, end: 12 }),
+			frameRate: 15,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'rright',
+			frames: this.anims.generateFrameNumbers('player', { start: 0, end: 12 }),
+			frameRate: 25,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'left',
+			frames: this.anims.generateFrameNumbers('player', { start: 13, end: 25 }),
+			frameRate: 15,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'rleft',
+			frames: this.anims.generateFrameNumbers('player', { start: 13, end: 25 }),
+			frameRate: 25,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'atqr',
+			frames: this.anims.generateFrameNumbers('player', { start: 26, end: 30 }),
+			frameRate: 15,
+			repeat: 1
+		});
+		this.anims.create({
+			key: 'atql',
+			frames: this.anims.generateFrameNumbers('player', { start: 31, end: 35 }),
+			frameRate: 15,
+			repeat: 1
+		});
+		this.anims.create({
+			key: 'down',
+			frames: this.anims.generateFrameNumbers('player', { start: 36, end: 50 }),
+			frameRate: 15,
+			repeat: 1
+		});
+		this.anims.create({
+			key: 'rdown',
+			frames: this.anims.generateFrameNumbers('player', { start: 36, end: 50 }),
+			frameRate: 25,
+			repeat: 1
+		});
+		this.anims.create({
+			key: 'up',
+			frames: this.anims.generateFrameNumbers('player', { start: 51, end: 66 }),
+			frameRate: 15,
+			repeat: 1
+		});
+		this.anims.create({
+			key: 'rup',
+			frames: this.anims.generateFrameNumbers('player', { start: 51, end: 66 }),
+			frameRate: 25,
+			repeat: 1
+		});
+		this.anims.create({
+			key: 'atqu',
+			frames: this.anims.generateFrameNumbers('player', { start: 67, end: 71 }),
+			frameRate: 15,
+			repeat: 1
+		});
+		this.anims.create({
+			key: 'atqd',
+			frames: this.anims.generateFrameNumbers('player', { start: 72, end: 76 }),
+			frameRate: 15,
+			repeat: 1
+		});
+		//indicadores vida y aguante
+		ivida = this.add.sprite(750, 75, 'vida');
+		ivida.setScale(0.5, 0.5);
+		
+		iaguante = this.add.sprite(750, 100, 'aguante');
+		iaguante.setScale(0.5, 0.5);
 	
-function update()
-{	
-	textosUpdate();
-	CommandMov();
-	CommandBomb();
-	Commandinventario();
-	Stamina();
-}
-
-function Stamina()
-{
-	//Control de aguante
-
-	switch (player.aguante)
-	{
-		case 0:
-			recuperacion = true;
-		break;
-		default:
-
-		if (player.aguante < aguanteMax && Sprint.isUp)
+		this.anims.create({
+			key: 'v3-6',
+			frames: this.anims.generateFrameNumbers('vida', { start: 1, end: 1 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v3-5',
+			frames: this.anims.generateFrameNumbers('vida', { start: 2, end: 2 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v3-4',
+			frames: this.anims.generateFrameNumbers('vida', { start: 3, end: 3 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v3-3',
+			frames: this.anims.generateFrameNumbers('vida', { start: 4, end: 4 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v3-2',
+			frames: this.anims.generateFrameNumbers('vida', { start: 5, end: 5 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v3-1',
+			frames: this.anims.generateFrameNumbers('vida', { start: 6, end: 6 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v3-0',
+			frames: this.anims.generateFrameNumbers('vida', { start: 7, end: 7 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v2-5',
+			frames: this.anims.generateFrameNumbers('vida', { start: 8, end: 8 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v2-4',
+			frames: this.anims.generateFrameNumbers('vida', { start: 9, end: 9 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v2-3',
+			frames: this.anims.generateFrameNumbers('vida', { start: 10, end: 10 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v2-2',
+			frames: this.anims.generateFrameNumbers('vida', { start: 11, end: 11 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v2-1',
+			frames: this.anims.generateFrameNumbers('vida', { start: 12, end: 12 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v2-0',
+			frames: this.anims.generateFrameNumbers('vida', { start: 13, end: 13 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v1-4',
+			frames: this.anims.generateFrameNumbers('vida', { start: 14, end: 14 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v1-3',
+			frames: this.anims.generateFrameNumbers('vida', { start: 15, end: 15 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v1-2',
+			frames: this.anims.generateFrameNumbers('vida', { start: 16, end: 16 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v1-1',
+			frames: this.anims.generateFrameNumbers('vida', { start: 17, end: 17 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'v1-0',
+			frames: this.anims.generateFrameNumbers('vida', { start: 18, end: 18 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-15',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 19, end: 19 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-14',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 20, end: 20 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-13',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 21, end: 21 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-12',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 22, end: 22 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-11',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 23, end: 23 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-10',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 24, end: 24 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-9',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 25, end: 25 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-8',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 26, end: 26 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-7',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 27, end: 27 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-6',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 28, end: 28 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-5',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 29, end: 29 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-4',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 30, end: 30 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-3',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 31, end: 31 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-2',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 32, end: 32 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-1',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 33, end: 33 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2-0',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 34, end: 34 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a2--1',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 35, end: 35 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a1-8',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 36, end: 36 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a1-7',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 37, end: 37 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a1-6',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 38, end: 38 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a1-5',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 39, end: 39 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a1-4',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 40, end: 40 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a1-3',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 41, end: 41 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a1-2',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 42, end: 42 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a1-1',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 43, end: 43 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a1-0',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 44, end: 44 }),
+			frameRate: 1,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'a1--1',
+			frames: this.anims.generateFrameNumbers('aguante', { start: 45, end: 45 }),
+			frameRate: 1,
+			repeat: -1
+		});
+	}
+	update() {
+		var cam = this.cameras.main;
+		this.player.setVelocity(0);
+		if (this.cursors.left.isDown) 
 		{
-			player.aguante++;
+			if (KeyK.isDown)
+			{
+				this.player.setVelocityX(-150);
+				this.player.anims.play('rleft', true);
+				mirandoderecha = 0;
+			}
+			else
+			{
+				this.player.setVelocityX(-100);
+				this.player.anims.play('left', true);
+				mirandoderecha = 0;
+			}
+		}
+		else if (this.cursors.right.isDown) 
+		{
+			if (KeyK.isDown)
+			{
+				this.player.setVelocityX(150);
+				this.player.anims.play('rright', true);
+				mirandoderecha = 1;
+			}
+			else
+			{
+				this.player.setVelocityX(100);
+				this.player.anims.play('right', true);
+				mirandoderecha = 1;
+			}
+		}
+		else if (this.cursors.up.isDown && this.cursors.left.isUp && this.cursors.right.isUp) 
+		{
+			if(KeyK.isDown)
+			{
+				this.player.setVelocityY(-150);
+				this.player.anims.play('rup', true);
+				mirandoderecha = 2;
+			}
+			else
+			{
+				this.player.setVelocityY(-100);
+				this.player.anims.play('up', true);
+				mirandoderecha = 2;
+			}
+		}
+		else if (this.cursors.down.isDown && this.cursors.left.isUp && this.cursors.right.isUp) 
+		{
+			if (KeyK.isDown)
+			{
+				this.player.setVelocityY(150);
+				this.player.anims.play('rdown', true);
+				mirandoderecha = 3;
+			}
+			else
+			{
+				this.player.setVelocityY(100);
+				this.player.anims.play('down', true);
+				mirandoderecha = 3;
+			}
+		}
+		else if (KeyJ.isDown)
+		{
+			if (mirandoderecha == 0)
+			{
+				this.player.anims.play('atql',true);
+			}
+			else if (mirandoderecha == 1) 
+			{
+				this.player.anims.play('atqr',true);
+			}
+			else if (mirandoderecha == 2)
+			{
+				this.player.anims.play('atqu',true);
+			}
+			else if (mirandoderecha == 3)
+			{
+				this.player.anims.play('atqd',true);
+			}
+		}
+		else 
+		{
+			if (mirandoderecha == 0)
+			{
+				this.player.anims.play('idlel', true);
+			}
+		
+			else
+			{
+				this.player.anims.play('idler', true);
+			}
 		}
 	}
 }
 
-function CommandMov()
-{
-	//Control de sprint
-
-	if (Sprint.isDown && player.aguante > 0)
-	{
-		velS = vel * 2.5;
-		player.aguante--;
-	}
-	else
-	{
-		velS = vel;
-	}	
-
-	//Control de movimiento
-
-	if (KeyA.isDown)
-	{
-		player.x-=velS;
-	}
-    else if (KeyD.isDown)
-	{
-		player.x+=velS;
-	}
-	if (KeyW.isDown)
-	{
-		player.y-=velS;
-	}
-	else if (KeyS.isDown)
-	{
-		player.y+=velS;
-	}
-}
-
-function CommandBomb()
-{
-	if (BombT.isDown && cooldown == 0 && player.aguante > 0)
-	{
-		bomb.x = player.x;
-		bomb.y = player.y;
-		bomb.visible = true;
-		cooldown = 25;
-		Bactiva = true;
-
-		if (player.aguante <= 75)
-		{
-			player.aguante-=player.aguante;
-		}
-		else
-		{
-			player.aguante-=75;
-		}
-	}
-
-	if (tiempoB < 0)
-	{
-		bomb.visible = false;
-		Bactiva = false;
-		tiempoB = 2;
-
-		fire.x = bomb.x;
-		fire.y = bomb.y;
-		fire.visible = true;
-	}
-}
-
-function Commandinventario()
-{
-	var JustDown = Phaser.Input.Keyboard.JustDown;
-
-	switch (objetoActivo)
-	{
-		case 0:
-			if (JustDown(KeyE))
-			{
-				inventario[objetoActivo].visible = false;
-				objetoActivo+=1;
-			}
-			if (JustDown(KeyQ) && player.vida < vidaMax)
-			{
-				player.vida+=1;
-			}
-		break;
-		case 1:
-			if (JustDown(KeyE))
-			{
-				inventario[objetoActivo].visible = false;
-				objetoActivo+=1;
-			}
-			if (JustDown(KeyQ))
-			{
-				if (EfectoActivo == false)
-				{
-					player.resistencia*=2;
-					EfectoActivo = true;
-				}
-			}
-		break;
-		case 2:
-			if (JustDown(KeyE))
-			{
-				inventario[objetoActivo].visible = false;
-				objetoActivo+=1;
-			}
-			if (JustDown(KeyQ))
-			{
-				if (EfectoActivo == false)
-				{
-					player.damage*=2;
-					EfectoActivo = true;
-				}
-			}
-		break;
-		case 3:
-			if (JustDown(KeyE))
-			{
-				inventario[objetoActivo].visible = false;
-				objetoActivo = 0;
-			}
-			if (JustDown(KeyQ))
-			{
-				player.aguante+=50;
-				recuperacion = false;
-				timeRecuperacion = 15;
-			}
-		break;
-	}
-
-	inventario[objetoActivo].visible = true;
-}
-
-function Fondo()
-{
-	fondo = this.add.sprite(0, 0, "sky");
-	fondo.setScale(1.75, 1.75);
-	fondo.setOrigin(0, 0);
-}
-
-function textosUpdate()
-{
-	textoCD.text = "Cooldown: " + cooldown;
-	textoT.text = "Destroy Bomb: " + tiempoB;
-	textoST.text = "Aguante: " + player.aguante;
-	textoCDST.text = "Recuperacion: " + recuperacion;
-	textoPV.text = "Vida: " + player.vida;
-	textoPR.text = "Resistencia: " + player.resistencia;
-	textoPD.text = "Danyo: " + player.damage;
-	textoTE.text = "tiempo efecto: " + timeEfecto;
-	textoTR.text = "tiempo recuperacion: " + timeRecuperacion;
-}
-
-var config = {
-    type: Phaser.AUTO,
-    width:800,
-    height:600,
-    physics:{
-        default:'arcade',
-        arcade: {
-            gravity: {y:0}
-        }
-    },
-    fps: {
-	target: 120,
-	forceSetTimeOut: true
+const config = {
+	type: Phaser.AUTO,
+	parent: 'phaser-example',
+	width: 800,
+	height: 600,
+	physics: {
+		default: 'arcade',
 	},
-    scene: {
-        preload:preload,
-        create:create,
-        update:update
-    }
+	fps: {
+		target: 30,
+		forceSetTimeOut: true
+	},
+	scene: [Example]
 };
-
-var game = new Phaser.Game(config);
+const game = new Phaser.Game(config);
