@@ -1,8 +1,7 @@
-export default class PocionRed extends Inventario{
+export default class PocionBlue extends Inventario{
   constructor(scene, x, y, textureKey, key){
     super(scene, x, y, textureKey, key);
     this.scene.add.existing(this);
-    this.visible = true;
   }
 }
 

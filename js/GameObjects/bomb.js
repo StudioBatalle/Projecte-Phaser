@@ -1,4 +1,3 @@
-//import Player from "../Characters/Player.js";
 import BootScene from "../BootScene.js";
 
 export default class Bomb extends Phaser.GameObjects.Sprite{
@@ -8,7 +7,7 @@ export default class Bomb extends Phaser.GameObjects.Sprite{
 		this.scene.add.existing(this);
 
 			this.setOrigin(0.5, 0.5);
-			this.setScale(0.15, 0.15);
+			this.setScale(0.25, 0.25);
 			this.visible = false;
 
 			this.cooldown = 5;

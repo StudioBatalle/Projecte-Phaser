@@ -8,7 +8,6 @@ export default class BootScene extends Phaser.Scene {
 		this.load.image("avatar","assets/images/hero.png");
 		this.load.image("fuego","assets/images/exp.png");
 		this.load.atlas("object_sprites", "assets/images/objectssheet.png", "assets/objectssheet_atlas.json");
-		this.bomba;
 	}
 
   create()
@@ -16,8 +15,15 @@ export default class BootScene extends Phaser.Scene {
 		this.player = new Player(this, 400, 200, 'avatar');
 		this.fire = new Fire(this, 0, 0, 'fuego');
 		this.bomb = new Bomb(this, 0, 0, 'object_sprites', 'bomb');
-		this.pocionRed = new PocionRed(this, this.game.config.width - 50, 0, 'pocionRed');
+		this.pocionRed = new PocionRed(this, this.game.config.width, 0, 'object_sprites', 'pocionred');
+		this.PocionGreen = new PocionGreen(this, this.game.config.width, 0, 'object_sprites', 'pociongreen');
+		this.PocionBlue = new PocionBlue(this, this.game.config.width, 0, 'object_sprites', 'pocionblue');
+		this.PocionYellow = new PocionYellow(this, this.game.config.width, 0, 'object_sprites', 'pocionyellow');
 		this.InvetarioList = this.physics.add.group();
+		this.InvetarioList.add(this.pocionRed);
+		this.InvetarioList.add(this.PocionGreen);
+		this.InvetarioList.add(this.PocionBlue);
+		this.InvetarioList.add(this.PocionYellow);
 		this.Teclas.call(this);
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
 	}
@@ -96,3 +102,7 @@ import Player from "./Characters/Player.js";
 import Bomb from "./GameObjects/Bomb.js";
 import Fire from "./GameObjects/Fire.js";
 import PocionRed from "./GameObjects/PocionRed.js";
+import PocionGreen from "./GameObjects/PocionGreen.js";
+import PocionBlue from "./GameObjects/PocionBlue.js";
+import PocionYellow from "./GameObjects/PocionYellow.js";
+import Inventario from "./GameObjects/Inventario.js";
