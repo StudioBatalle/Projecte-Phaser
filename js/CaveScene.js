@@ -10,7 +10,10 @@ export default class CaveScene extends BootScene {
 	update()
 	{
 		this.player.update();
+		this.bombaMov.update();
 		this.bomb.update();
-		this.inventario.update();
+		this.InventarioChange();
+		this.VidaText.text = "Vida: " + this.player.vida;
+		this.pociones.text = "Pociones: " + this.pocionRed.almacenado;
 	}
 }

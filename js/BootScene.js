@@ -16,16 +16,14 @@ export default class BootScene extends Phaser.Scene {
 		this.fire = new Fire(this, 0, 0, 'fuego');
 		this.bomb = new Bomb(this, 0, 0, 'object_sprites', 'bomb');
 		this.pocionRed = new PocionRed(this, this.game.config.width, 0, 'object_sprites', 'pocionred');
-		this.PocionGreen = new PocionGreen(this, this.game.config.width, 0, 'object_sprites', 'pociongreen');
-		this.PocionBlue = new PocionBlue(this, this.game.config.width, 0, 'object_sprites', 'pocionblue');
-		this.PocionYellow = new PocionYellow(this, this.game.config.width, 0, 'object_sprites', 'pocionyellow');
-		this.InvetarioList = this.physics.add.group();
-		this.InvetarioList.add(this.pocionRed);
-		this.InvetarioList.add(this.PocionGreen);
-		this.InvetarioList.add(this.PocionBlue);
-		this.InvetarioList.add(this.PocionYellow);
+		this.pocionGreen = new PocionGreen(this, this.game.config.width - this.pocionRed.width, 0, 'object_sprites', 'pociongreen');
+		this.pocionBlue = new PocionBlue(this, this.game.config.width, 0, 'object_sprites', 'pocionblue');
+		this.pocionYellow = new PocionYellow(this, this.game.config.width, 0, 'object_sprites', 'pocionyellow');
 		this.Teclas.call(this);
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
+		this.VidaText = this.add.text(16, 16, 'vida:', {fontsize:'32px', fill: '#FFF'});
+		this.pociones = this.add.text(16, 16 * 2, 'pociones:', {fontsize:'32px', fill: '#FFF'});
+		this.bombaMov = new Player(this, 200, 200, 'avatar');
 	}
 
 	update()
@@ -38,18 +36,18 @@ export default class BootScene extends Phaser.Scene {
 
   cronometro()
 	{
-		/*//Control de los efectos de pocion
+		//Control de los efectos de pocion
 
-		if(EfectoActivo)
+		/*if(this.Inventario.EfectoActivo)
 		{
-			timeEfecto++;
+			this.Inventario.timeEfecto++;
 
-			if (timeEfecto == 15)
+			if (this.Inventario.timeEfecto == 15)
 			{
-				player.damage = damageMax;
-				player.resistencia = resistenciaMax;
-				timeEfecto = 0;
-				EfectoActivo = false;
+				this.player.damage = this.player.damageMax;
+				this.player.resistencia = this.player.resistenciaMax;
+				this.Inventario.timeEfecto = 0;
+				this.Inventario.EfectoActivo = false;
 			}
 		}*/
 
@@ -91,11 +89,55 @@ export default class BootScene extends Phaser.Scene {
 	}
 
   Teclas()
-  {
-  	this.KeyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
-  	this.KeyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+	{
     this.Change = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
+		this.Key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+		this.Key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+		this.Key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
+		this.Key4 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
   }
+
+	InventarioChange()
+	{
+		var JustDown = Phaser.Input.Keyboard.JustDown;
+
+	    if (JustDown(this.Key1))
+			{
+				if (this.player.vida < this.player.vidaMax && this.pocionRed.almacenado > 0)
+				{
+					this.player.vida++;
+					this.pocionRed.almacenado--;
+				}
+	    }
+			else if (JustDown(this.Key2))
+			{
+				if (this.pocionGreen.almacenado > 0 && this.Inventario.EfectoActivo == false)
+				{
+						this.player.damage*=2;
+						this.Inventario.EfectoActivo = true;
+						this.pocionGreen.almacenado--;
+				}
+	    }
+			else if (JustDown(this.Key3))
+			{
+				if (this.pocionBlue.almacenado > 0 && this.Inventario.EfectoActivo == false)
+				{
+					this.player.resistencia*=2;
+					this.Inventario.EfectoActivo = true;
+					this.pocionBlue.almacenado--;
+				}
+	    }
+			else if (JustDown(this.Key4))
+			{
+				if (this.pocionYellow.almacenado > 0)
+				{
+					this.player.aguante+=50;
+					this.player.recuperacion = false;
+					this.player.timeRecuperacion = 15;
+					this.pocionYellow.almacenado--;
+				}
+	    }
+	}
 }
 
 import Player from "./Characters/Player.js";
