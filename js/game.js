@@ -1,5 +1,6 @@
 import CaveScene from "./CaveScene.js";
 import ForrestScene from "./ForrestScene.js";
+import HUDScene from "./HUDScene.js";
 import BootScene from "./BootScene.js";
 
 var config = {
@@ -7,7 +8,7 @@ var config = {
     width:800,
     height:600,
     parent: "phaser-prototipo",
-    scene: [ BootScene, CaveScene, ForrestScene ],
+    scene: [ BootScene, HUDScene, CaveScene, ForrestScene ],
     physics:{
         default:'arcade',
         arcade: {

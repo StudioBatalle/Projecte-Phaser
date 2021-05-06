@@ -12,26 +12,19 @@ export default class BootScene extends Phaser.Scene {
 
   create()
 	{
+		this.game.config.world.resize(6000, 600);
 		this.player = new Player(this, 400, 200, 'avatar');
 		this.fire = new Fire(this, 0, 0, 'fuego');
 		this.bomb = new Bomb(this, 0, 0, 'object_sprites', 'bomb');
-		this.pocionRed = new PocionRed(this, this.game.config.width, 0, 'object_sprites', 'pocionred');
-		this.pocionGreen = new PocionGreen(this, this.game.config.width - this.pocionRed.width, 0, 'object_sprites', 'pociongreen');
-		this.pocionBlue = new PocionBlue(this, this.game.config.width, 0, 'object_sprites', 'pocionblue');
-		this.pocionYellow = new PocionYellow(this, this.game.config.width, 0, 'object_sprites', 'pocionyellow');
 		this.Teclas.call(this);
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
 		this.VidaText = this.add.text(16, 16, 'vida:', {fontsize:'32px', fill: '#FFF'});
 		this.pociones = this.add.text(16, 16 * 2, 'pociones:', {fontsize:'32px', fill: '#FFF'});
-		this.bombaMov = new Player(this, 200, 200, 'avatar');
 	}
 
 	update()
 	{
-		if (this.Change.isDown)
-		{
-				this.scene.start('CaveLevel');
-		}
+		 this.scene.launch('CaveLevel').launch('HUDScreen').stop();
 	}
 
   cronometro()
@@ -143,8 +136,4 @@ export default class BootScene extends Phaser.Scene {
 import Player from "./Characters/Player.js";
 import Bomb from "./GameObjects/Bomb.js";
 import Fire from "./GameObjects/Fire.js";
-import PocionRed from "./GameObjects/PocionRed.js";
-import PocionGreen from "./GameObjects/PocionGreen.js";
-import PocionBlue from "./GameObjects/PocionBlue.js";
-import PocionYellow from "./GameObjects/PocionYellow.js";
 import Inventario from "./GameObjects/Inventario.js";
