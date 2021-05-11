@@ -8,13 +8,18 @@ export default class BootScene extends Phaser.Scene {
 		this.load.image("avatar","assets/images/hero.png");
 		this.load.image("fuego","assets/images/exp.png");
 		this.load.atlas("object_sprites", "assets/images/objectssheet.png", "assets/objectssheet_atlas.json");
+		this.load.tilemapTiledJSON('LastRoom', 'assets/TileMaps/LastRoom.json');
+		this.load.image('tiles', 'assets/TileMaps/NatureTileset.png');
 	}
 
   create()
 	{
-		this.game.config.world.resize(6000, 600);
-		this.player = new Player(this, 400, 200, 'avatar');
+		this.mapLast = this.make.tilemap({ key: 'LastRoom'});
+		this.tileset2 = this.mapLast.addTilesetImage('NatureTileset', 'tiles', 16, 16, 0, 0);
+		this.layer1 = this.mapLast.createLayer('Suelo', tileset, 0, 0);
+		this.layer2 = this.mapLast.createLayer('Pared', tileset, 0, 0);
 		this.fire = new Fire(this, 0, 0, 'fuego');
+		this.player = new Player(this, 400, 200, 'avatar');
 		this.bomb = new Bomb(this, 0, 0, 'object_sprites', 'bomb');
 		this.Teclas.call(this);
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
@@ -24,7 +29,7 @@ export default class BootScene extends Phaser.Scene {
 
 	update()
 	{
-		 this.scene.launch('CaveLevel').launch('HUDScreen').stop();
+		 //this.scene.launch('CaveLevel').launch('HUDScreen').stop();
 	}
 
   cronometro()
