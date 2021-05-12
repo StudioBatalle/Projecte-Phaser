@@ -5,5 +5,6 @@ export default class Inventario extends Phaser.GameObjects.Sprite{
       this.setScale(0.55, 0.55);
       this.EfectoActivo = false;
     	this.timeEfecto = 0;
+      this.almacenado = 3;
   }
 }

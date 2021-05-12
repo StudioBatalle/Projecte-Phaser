@@ -11,5 +11,7 @@ export default class CaveScene extends BootScene {
 	{
 		this.player.update();
 		this.bomb.update();
+		this.InventarioChange();
+		//this.VidaText.text = "vida: " + this.player.vida;
 	}
 }

@@ -15,9 +15,10 @@ export default class BootScene extends Phaser.Scene {
   create()
 	{
 		this.mapLast = this.make.tilemap({ key: 'LastRoom'});
-		this.tileset2 = this.mapLast.addTilesetImage('NatureTileset', 'tiles', 16, 16, 0, 0);
-		this.layer1 = this.mapLast.createLayer('Suelo', tileset, 0, 0);
-		this.layer2 = this.mapLast.createLayer('Pared', tileset, 0, 0);
+		this.tileset = this.mapLast.addTilesetImage('NatureTileset', 'tiles', 16, 16, 0, 0);
+		this.layer1 = this.mapLast.createLayer('Suelo', this.tileset, 0, 0);
+		this.layer2 = this.mapLast.createLayer('Pared', this.tileset, 0, 0);
+		this.layer2.setCollisionByProperty({collides:true});
 		this.fire = new Fire(this, 0, 0, 'fuego');
 		this.player = new Player(this, 400, 200, 'avatar');
 		this.bomb = new Bomb(this, 0, 0, 'object_sprites', 'bomb');
@@ -25,29 +26,45 @@ export default class BootScene extends Phaser.Scene {
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
 		this.VidaText = this.add.text(16, 16, 'vida:', {fontsize:'32px', fill: '#FFF'});
 		this.pociones = this.add.text(16, 16 * 2, 'pociones:', {fontsize:'32px', fill: '#FFF'});
+		this.pocionRed = new Inventario(this, this.game.config.width, 0, 'object_sprites', 'pocionred');
+		this.pocionGreen = new Inventario(this, this.pocionRed.x - 50, 0, 'object_sprites', 'pociongreen');
+		this.pocionBlue = new Inventario(this, this.pocionGreen.x - 50, 0, 'object_sprites', 'pocionblue');
+		this.pocionYellow = new Inventario(this, this.pocionBlue.x - 50, 0, 'object_sprites', 'pocionyellow');
 	}
 
 	update()
 	{
-		 //this.scene.launch('CaveLevel').launch('HUDScreen').stop();
+		 this.scene.launch('CaveLevel');
+		 this.scene.launch('HUDScreen');
 	}
 
   cronometro()
 	{
 		//Control de los efectos de pocion
 
-		/*if(this.Inventario.EfectoActivo)
+		if(this.pocionGreen.EfectoActivo)
 		{
-			this.Inventario.timeEfecto++;
+			this.pocionGreen.timeEfecto++;
 
-			if (this.Inventario.timeEfecto == 15)
+			if (this.pocionGreen.timeEfecto == 15)
 			{
 				this.player.damage = this.player.damageMax;
-				this.player.resistencia = this.player.resistenciaMax;
-				this.Inventario.timeEfecto = 0;
-				this.Inventario.EfectoActivo = false;
+				this.pocionGreen.timeEfecto = 0;
+				this.pocionGreen.EfectoActivo = false;
 			}
-		}*/
+		}
+
+		if(this.pocionBlue.EfectoActivo)
+		{
+			this.pocionBlue.timeEfecto++;
+
+			if (this.pocionBlue.timeEfecto == 15)
+			{
+				this.player.resistencia = this.player.resistenciaMax;
+				this.pocionBlue.timeEfecto = 0;
+				this.pocionBlue.EfectoActivo = false;
+			}
+		}
 
 		//Control del aguante
 
@@ -109,19 +126,19 @@ export default class BootScene extends Phaser.Scene {
 	    }
 			else if (JustDown(this.Key2))
 			{
-				if (this.pocionGreen.almacenado > 0 && this.Inventario.EfectoActivo == false)
+				if (this.pocionGreen.almacenado > 0 && this.pocionGreen.EfectoActivo == false && this.pocionBlue.EfectoActivo == false)
 				{
 						this.player.damage*=2;
-						this.Inventario.EfectoActivo = true;
+						this.pocionGreen.EfectoActivo = true;
 						this.pocionGreen.almacenado--;
 				}
 	    }
 			else if (JustDown(this.Key3))
 			{
-				if (this.pocionBlue.almacenado > 0 && this.Inventario.EfectoActivo == false)
+				if (this.pocionBlue.almacenado > 0 && this.pocionBlue.EfectoActivo == false && this.pocionGreen.EfectoActivo == false)
 				{
 					this.player.resistencia*=2;
-					this.Inventario.EfectoActivo = true;
+					this.pocionBlue.EfectoActivo = true;
 					this.pocionBlue.almacenado--;
 				}
 	    }

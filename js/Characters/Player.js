@@ -6,7 +6,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
       this.setOrigin(0.5, 1);
-      this.setScale(0.35, 0.35);
+      this.setScale(0.2, 0.2);
 
     	//Para controlar mejor las estadisticas y asi poder mejorarlas cuando se pase el primer nivel
 
