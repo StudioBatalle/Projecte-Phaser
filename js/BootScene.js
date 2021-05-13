@@ -7,35 +7,45 @@ export default class BootScene extends Phaser.Scene {
 	{
 		this.load.image("avatar","assets/images/hero.png");
 		this.load.image("fuego","assets/images/exp.png");
-		this.load.atlas("object_sprites", "assets/images/objectssheet.png", "assets/objectssheet_atlas.json");
+		this.load.atlas("object_sprites", "assets/images/objectssheet.png", "assets/images/objectssheet_atlas.json");
 		this.load.tilemapTiledJSON('LastRoom', 'assets/TileMaps/LastRoom.json');
 		this.load.image('tiles', 'assets/TileMaps/NatureTileset.png');
 	}
 
   create()
 	{
+		//Creación del mapa
 		this.mapLast = this.make.tilemap({ key: 'LastRoom'});
 		this.tileset = this.mapLast.addTilesetImage('NatureTileset', 'tiles', 16, 16, 0, 0);
-		this.layer1 = this.mapLast.createLayer('Suelo', this.tileset, 0, 0);
-		this.layer2 = this.mapLast.createLayer('Pared', this.tileset, 0, 0);
-		this.layer2.setCollisionByProperty({collides:true});
+		this.layer1 = this.mapLast.createStaticLayer('Suelo', this.tileset, 0, 0);
+		this.layer2 = this.mapLast.createStaticLayer('Pared', this.tileset, 0, 0);
+		this.layer2.setCollisionByProperty({ collides: true });
+
+		//Creación de personaje con sus mecanicas
 		this.fire = new Fire(this, 0, 0, 'fuego');
 		this.player = new Player(this, 400, 200, 'avatar');
 		this.bomb = new Bomb(this, 0, 0, 'object_sprites', 'bomb');
+
+		//Eventos o configuraciones utiles
 		this.Teclas.call(this);
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
-		this.VidaText = this.add.text(16, 16, 'vida:', {fontsize:'32px', fill: '#FFF'});
-		this.pociones = this.add.text(16, 16 * 2, 'pociones:', {fontsize:'32px', fill: '#FFF'});
-		this.pocionRed = new Inventario(this, this.game.config.width, 0, 'object_sprites', 'pocionred');
-		this.pocionGreen = new Inventario(this, this.pocionRed.x - 50, 0, 'object_sprites', 'pociongreen');
-		this.pocionBlue = new Inventario(this, this.pocionGreen.x - 50, 0, 'object_sprites', 'pocionblue');
-		this.pocionYellow = new Inventario(this, this.pocionBlue.x - 50, 0, 'object_sprites', 'pocionyellow');
+		this.physics.add.collider(this.player, this.layer2);
+
+		//Configuracion de la camara
+		this.camera = this.cameras.main;
+  	this.camera.startFollow(this.player);
+		this.physics.world.createDebugGraphic();
+
+		//Creación de Inventario
+		this.pocionYellow = new Inventario(this, this.game.config.width, 0, 'object_sprites', 'pocionyellow');
+		this.pocionBlue = new Inventario(this, this.pocionYellow.x - 50, 0, 'object_sprites', 'pocionblue');
+		this.pocionGreen = new Inventario(this, this.pocionBlue.x - 50, 0, 'object_sprites', 'pociongreen');
+		this.pocionRed = new Inventario(this, this.pocionGreen.x - 50, 0, 'object_sprites', 'pocionred');
 	}
 
 	update()
 	{
-		 this.scene.launch('CaveLevel');
-		 this.scene.launch('HUDScreen');
+		 this.scene.start('CaveLevel');
 	}
 
   cronometro()

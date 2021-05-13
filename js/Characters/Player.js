@@ -25,8 +25,6 @@ export default class Player extends Phaser.GameObjects.Sprite{
     	this.recuperacion = false;
     	this.timeRecuperacion = 15;
 
-      //this.scene1 = this.scene.scene.get('BootScene');
-
       const { W, A, S, D, SHIFT } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = this.scene.input.keyboard.addKeys({
             KeyW: W,
@@ -75,24 +73,10 @@ export default class Player extends Phaser.GameObjects.Sprite{
     if (keys.KeyW.isDown)
     {
       this.y-=this.velS;
-
-      if (keys.KeyA.isDown)
-      {
-        //Condiciones para diagonales, si se necesita en especifico que este moviendose en diagonal
-      }
-      else if (keys.KeyD.isDown)
-      { }
     }
     else if (keys.KeyS.isDown)
     {
       this.y+=this.velS;
-
-      if (keys.KeyA.isDown)
-      {
-        //Condiciones para diagonales, si se necesita en especifico que este moviendose en diagonal
-      }
-      else if (keys.KeyD.isDown)
-      { }
-  }
+    }
   }
 }
