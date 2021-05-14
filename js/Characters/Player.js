@@ -1,12 +1,12 @@
 import BootScene from "../BootScene.js";
 
 export default class Player extends Phaser.GameObjects.Sprite{
-  constructor(scene, x, y, key){
-    super(scene, x, y, key);
+  constructor(scene, x, y, texture, frame){
+    super(scene, x, y, texture, frame);
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
       this.setOrigin(0.5, 1);
-      this.setScale(0.2, 0.2);
+      //this.setScale(0.2, 0.2);
 
     	//Para controlar mejor las estadisticas y asi poder mejorarlas cuando se pase el primer nivel
 
@@ -66,7 +66,10 @@ export default class Player extends Phaser.GameObjects.Sprite{
     //Control de movimiento
 
     if (keys.KeyA.isDown)
-    { this.x-=this.velS; }
+    {
+      this.x-=this.velS;
+      this.anims.play("walk_left");
+    }
     else if (keys.KeyD.isDown)
     { this.x+=this.velS; }
 

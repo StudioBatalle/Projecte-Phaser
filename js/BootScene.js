@@ -5,9 +5,10 @@ export default class BootScene extends Phaser.Scene {
 
   preload()
 	{
-		this.load.image("avatar","assets/images/hero.png");
 		this.load.image("fuego","assets/images/exp.png");
 		this.load.atlas("object_sprites", "assets/images/objectssheet.png", "assets/images/objectssheet_atlas.json");
+		this.load.atlas("avatar", "assets/images/avatar_atlas.png", "assets/images/avatar_atlas.json");
+		this.load.animation('avatar_atlas_anim', 'assets/images/avatar_atlas_anim.json');
 		this.load.tilemapTiledJSON('LastRoom', 'assets/TileMaps/LastRoom.json');
 		this.load.image('tiles', 'assets/TileMaps/NatureTileset.png');
 	}
@@ -17,13 +18,13 @@ export default class BootScene extends Phaser.Scene {
 		//Creación del mapa
 		this.mapLast = this.make.tilemap({ key: 'LastRoom'});
 		this.tileset = this.mapLast.addTilesetImage('NatureTileset', 'tiles', 16, 16, 0, 0);
-		this.layer1 = this.mapLast.createStaticLayer('Suelo', this.tileset, 0, 0);
-		this.layer2 = this.mapLast.createStaticLayer('Pared', this.tileset, 0, 0);
+		this.layer1 = this.mapLast.createLayer('Suelo', this.tileset, 0, 0);
+		this.layer2 = this.mapLast.createLayer('Pared', this.tileset, 0, 0);
 		this.layer2.setCollisionByProperty({ collides: true });
 
 		//Creación de personaje con sus mecanicas
 		this.fire = new Fire(this, 0, 0, 'fuego');
-		this.player = new Player(this, 400, 200, 'avatar');
+		this.player = new Player(this, 400, 200, 'avatar', 'sprite_01');
 		this.bomb = new Bomb(this, 0, 0, 'object_sprites', 'bomb');
 
 		//Eventos o configuraciones utiles
