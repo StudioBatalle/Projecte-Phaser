@@ -7,8 +7,9 @@ export default class BootScene extends Phaser.Scene {
 	{
 		this.load.image("fuego","assets/images/exp.png");
 		this.load.atlas("object_sprites", "assets/images/objectssheet.png", "assets/images/objectssheet_atlas.json");
-		this.load.atlas("avatar", "assets/images/avatar_atlas.png", "assets/images/avatar_atlas.json");
-		this.load.animation('avatar_atlas_anim', 'assets/images/avatar_atlas_anim.json');
+		this.load.spritesheet('avatar', 'assets/images/avatar.png', { frameWidth: 32, frameHeight: 32 });
+		//this.load.atlas("avatar", "assets/images/avatar_atlas.png", "assets/images/avatar_atlas.json");
+		//this.load.animation('avatar_atlas_anim', 'assets/images/avatar_atlas_anim.json');
 		this.load.tilemapTiledJSON('LastRoom', 'assets/TileMaps/LastRoom.json');
 		this.load.image('tiles', 'assets/TileMaps/NatureTileset.png');
 	}
@@ -31,10 +32,6 @@ export default class BootScene extends Phaser.Scene {
 		this.Teclas.call(this);
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
 		this.physics.add.collider(this.player, this.layer2);
-
-		//Configuracion de la camara
-		this.camera = this.cameras.main;
-  	this.camera.startFollow(this.player);
 		this.physics.world.createDebugGraphic();
 
 		//Creación de Inventario
@@ -90,6 +87,8 @@ export default class BootScene extends Phaser.Scene {
 				this.player.recuperacion = false;
 			}
 		}
+
+		//Control de bombas
 
 		if (this.bomb.Bactiva)
 		{
