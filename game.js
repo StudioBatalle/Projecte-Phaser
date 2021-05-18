@@ -1,8 +1,15 @@
 var mirandoderecha;
+var nivaguante;
 var iaguante;
+var aguante;
+var nivvida;
 var ivida;
+var vida;
 var KeyJ
 var KeyK
+var jabd = 1;
+var tiempo = 0;
+var maxtiempo = 1000;
 class Example extends Phaser.Scene {
 	constructor() {
 		super();
@@ -13,31 +20,45 @@ class Example extends Phaser.Scene {
 		this.load.image('bg', 'assets/testmap.png');
 		//jugador
 		this.load.spritesheet('player', 'assets/player.png', { frameWidth: 32, frameHeight: 32 });
+		//jabalí
+		this.load.spritesheet('jabali', 'assets/jabali.png', { frameWidth: 160, frameHeight: 160 });
+		
 		//indicadores
 		this.load.spritesheet('vida', 'assets/vida.png', { frameWidth: 160, frameHeight: 160 });
 		this.load.spritesheet('aguante', 'assets/aguante.png', { frameWidth: 160, frameHeight: 160 });
 	}
 	create() {
-  
 		//  Camara
 		this.cameras.main.setBounds(-0, -0, 1535, 960);
 		this.physics.world.setBounds(-0, -0, 1535, 960);
-		this.add.image(0, 0, 'bg').setOrigin(0);
-		
+		this.add.image(0, 0, 'bg').setOrigin(0);		
 		//teclas
 		KeyJ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
 		KeyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
 		this.cursors = this.input.keyboard.createCursorKeys();
-		this.cameras.main.setDeadzone(400, 200);
+		//this.cameras.main.setDeadzone(400, 200);
 		//this.cameras.main.setZoom(0.5);
 		if (this.cameras.main.deadzone) {
 			const graphics = this.add.graphics().setScrollFactor(0);
 			graphics.lineStyle(2, 0x00ff00, 1);
 			graphics.strokeRect(200, 200, this.cameras.main.deadzone.width, this.cameras.main.deadzone.height);
 		}
-		this.text = this.add.text(32, 32).setScrollFactor(0).setFontSize(32).setColor('#ffffff');
-
-
+		
+		//Jabali
+		this.jabali = this.physics.add.sprite(500, 300, 'jabali');
+		this.jabali.setScale(0.25,0.25)
+		this.anims.create({
+			key: 'jabd',
+			frames: this.anims.generateFrameNumbers('jabali', { start: 0, end: 8 }),
+			frameRate: 10,
+			repeat: -1
+		});
+		this.anims.create({
+			key: 'jabi',
+			frames: this.anims.generateFrameNumbers('jabali', { start: 9, end: 16 }),
+			frameRate: 10,
+			repeat: -1
+		});
 		//jugador
 		this.player = this.physics.add.sprite(400, 300, 'player');
 		this.player.setCollideWorldBounds(true);
@@ -126,6 +147,7 @@ class Example extends Phaser.Scene {
 			frameRate: 15,
 			repeat: 1
 		});
+	
 		//indicadores vida y aguante
 		ivida = this.add.sprite(750, 75, 'vida');
 		ivida.setScale(0.5, 0.5);
@@ -405,19 +427,238 @@ class Example extends Phaser.Scene {
 		});
 	}
 	update() {
+		nivvida = 3;
+		vida = 6;
+		nivaguante = 2;
+		aguante = 15; 
+		//vida y aguante
+		//vida
+		if (nivvida == 3)
+		{
+			if(vida == 6)
+			{
+				ivida.anims.play('v3-6', true);
+			}
+			if(vida == 5)
+			{
+				ivida.anims.play('v3-5', true);
+			}
+			if(vida == 4)
+			{
+				ivida.anims.play('v3-4', true);
+			}
+			if(vida == 3)
+			{
+				ivida.anims.play('v3-3', true);
+			}
+			if(vida == 2)
+			{
+				ivida.anims.play('v3-2', true);
+			}
+			if(vida == 1)
+			{
+				ivida.anims.play('v3-1', true);
+			}
+			if(vida == 0)
+			{
+				ivida.anims.play('v3-0', true);
+			}
+		}
+		else if (nivvida == 2)
+		{
+			if(vida == 5)
+			{
+				ivida.anims.play('v2-5', true);
+			}
+			if(vida == 4)
+			{
+				ivida.anims.play('v2-4', true);
+			}
+			if(vida == 3)
+			{
+				ivida.anims.play('v2-3', true);
+			}
+			if(vida == 2)
+			{
+				ivida.anims.play('v2-2', true);
+			}
+			if(vida == 1)
+			{
+				ivida.anims.play('v2-1', true);
+			}
+			if(vida == 0)
+			{
+				ivida.anims.play('v2-0', true);
+			}
+		}
+		else if (nivvida == 1)
+		{
+			if(vida == 4)
+			{
+				ivida.anims.play('v1-4', true);
+			}
+			if(vida == 3)
+			{
+				ivida.anims.play('v1-3', true);
+			}
+			if(vida == 2)
+			{
+				ivida.anims.play('v1-2', true);
+			}
+			if(vida == 1)
+			{
+				ivida.anims.play('v1-1', true);
+			}
+			if(vida == 0)
+			{
+				ivida.anims.play('v1-0', true);
+			}
+		}
+		//aguante
+		if (nivaguante == 2)
+		{
+			if(aguante == 15)
+			{
+				iaguante.anims.play('a2-15', true);
+			}
+			if(aguante == 14)
+			{
+				iaguante.anims.play('a2-14', true);
+			}
+			if(aguante == 13)
+			{
+				iaguante.anims.play('a2-13', true);
+			}
+			if(aguante == 12)
+			{
+				iaguante.anims.play('a2-12', true);
+			}
+			if(aguante == 11)
+			{
+				iaguante.anims.play('a2-11', true);
+			}
+			if(aguante == 10)
+			{
+				iaguante.anims.play('a2-10', true);
+			}
+			if(aguante == 9)
+			{
+				iaguante.anims.play('a2-9', true);
+			}
+			if(aguante == 8)
+			{
+				iaguante.anims.play('a2-8', true);
+			}
+			if(aguante == 7)
+			{
+				iaguante.anims.play('a2-7', true);
+			}
+			if(aguante == 6)
+			{
+				iaguante.anims.play('a2-6', true);
+			}
+			if(aguante == 5)
+			{
+				iaguante.anims.play('a2-5', true);
+			}
+			if(aguante == 4)
+			{
+				iaguante.anims.play('a2-4', true);
+			}
+			if(aguante == 3)
+			{
+				iaguante.anims.play('a2-3', true);
+			}
+			if(aguante == 2)
+			{
+				iaguante.anims.play('a2-2', true);
+			}
+			if(aguante == 1)
+			{
+				iaguante.anims.play('a2-1', true);
+			}
+			if(aguante == 0)
+			{
+				iaguante.anims.play('a2-0', true);
+			}
+		}
+		else if (nivaguante == 1)
+		{
+			if(aguante == 8)
+			{
+				iaguante.anims.play('a1-8', true);
+			}
+			if(aguante == 7)
+			{
+				iaguante.anims.play('a1-7', true);
+			}
+			if(aguante == 6)
+			{
+				iaguante.anims.play('a1-6', true);
+			}
+			if(aguante == 5)
+			{
+				iaguante.anims.play('a1-5', true);
+			}
+			if(aguante == 4)
+			{
+				iaguante.anims.play('a1-4', true);
+			}
+			if(aguante == 3)
+			{
+				iaguante.anims.play('a1-3', true);
+			}
+			if(aguante == 2)
+			{
+				iaguante.anims.play('a1-2', true);
+			}
+			if(aguante == 1)
+			{
+				iaguante.anims.play('a1-1', true);
+			}
+			if(aguante == 0)
+			{
+				iaguante.anims.play('a1-0', true);
+			}
+		}
+		//jabali
+		
+		if (jabd == 1)
+		{
+			this.jabali.X += 95;
+			this.jabali.anims.play('jabd', true);
+		 	tiempo += 0.25;
+			if (tiempo > maxtiempo);
+			{
+				jabd = 0;
+				tiempo = 0;
+			}
+		} 
+		else 
+		{
+			this.jabali.X -= 95;
+			this.jabali.anims.play('jabi', true);
+			tiempo += 0.25;
+			if (tiempo > maxtiempo);
+			{
+				jabd = 1;
+				tiempo = 0;
+			}
+		}
+		//personaje
 		var cam = this.cameras.main;
 		this.player.setVelocity(0);
 		if (this.cursors.left.isDown) 
 		{
 			if (KeyK.isDown)
 			{
-				this.player.setVelocityX(-150);
+				this.player.setVelocityX(-120);
 				this.player.anims.play('rleft', true);
 				mirandoderecha = 0;
 			}
 			else
 			{
-				this.player.setVelocityX(-100);
+				this.player.setVelocityX(-90);
 				this.player.anims.play('left', true);
 				mirandoderecha = 0;
 			}
@@ -426,13 +667,13 @@ class Example extends Phaser.Scene {
 		{
 			if (KeyK.isDown)
 			{
-				this.player.setVelocityX(150);
+				this.player.setVelocityX(120);
 				this.player.anims.play('rright', true);
 				mirandoderecha = 1;
 			}
 			else
 			{
-				this.player.setVelocityX(100);
+				this.player.setVelocityX(90);
 				this.player.anims.play('right', true);
 				mirandoderecha = 1;
 			}
@@ -441,13 +682,13 @@ class Example extends Phaser.Scene {
 		{
 			if(KeyK.isDown)
 			{
-				this.player.setVelocityY(-150);
+				this.player.setVelocityY(-120);
 				this.player.anims.play('rup', true);
 				mirandoderecha = 2;
 			}
 			else
 			{
-				this.player.setVelocityY(-100);
+				this.player.setVelocityY(-90);
 				this.player.anims.play('up', true);
 				mirandoderecha = 2;
 			}
@@ -456,19 +697,20 @@ class Example extends Phaser.Scene {
 		{
 			if (KeyK.isDown)
 			{
-				this.player.setVelocityY(150);
+				this.player.setVelocityY(120);
 				this.player.anims.play('rdown', true);
 				mirandoderecha = 3;
 			}
 			else
 			{
-				this.player.setVelocityY(100);
+				this.player.setVelocityY(90);
 				this.player.anims.play('down', true);
 				mirandoderecha = 3;
 			}
 		}
 		else if (KeyJ.isDown)
 		{
+			//this.jabali.destroy();
 			if (mirandoderecha == 0)
 			{
 				this.player.anims.play('atql',true);
@@ -483,7 +725,8 @@ class Example extends Phaser.Scene {
 			}
 			else if (mirandoderecha == 3)
 			{
-				this.player.anims.play('atqd',true);
+				this.player.anims.play
+				('atqd',true);
 			}
 		}
 		else 
@@ -516,3 +759,6 @@ const config = {
 	scene: [Example]
 };
 const game = new Phaser.Game(config);
+
+
+
