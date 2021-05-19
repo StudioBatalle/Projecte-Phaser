@@ -14,14 +14,14 @@ export default class Shoot extends Phaser.GameObjects.Sprite{
     //variables del ojo
 
     this.dispTiempo = 2;
-    this.dispTiempoActivo = 2;
+    this.dispTiempoActivo = 3;
   }
 
   update()
   {
     //Control de disparo
 
-    if (this.disp == false)
+    if (this.ojo.DispAct == false)
     {
       //Dirreción hacia el jugador
 

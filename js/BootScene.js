@@ -34,7 +34,7 @@ export default class BootScene extends Phaser.Scene {
 		this.jabali = new Jabali(this, 500, 100, 'ojo');
 
 		//Creación de ojo y su disparo
-		this.ojo = new Eye(this, 400, 100, 'ojo');
+		this.ojo = new Eye(this, 400, 400, 'ojo');
 		this.disparo = new Shoot(this, this.ojo.x, this.ojo.y, 'disparo');
 
 		//Creación de Inventario
@@ -46,9 +46,9 @@ export default class BootScene extends Phaser.Scene {
 		//Eventos o configuraciones utiles
 		this.Teclas.call(this);
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
+		this.physics.add.overlap(this.player, this.ojo, this.invencibleFunc, null, this);
 		this.physics.add.collider(this.player, this.layer2);
 		this.physics.world.createDebugGraphic();
-		this.physics.add.overlap(this.player, this.ojo, this.ojo.Invencible(), null, this.scene);
 	}
 
 	update()
@@ -59,7 +59,6 @@ export default class BootScene extends Phaser.Scene {
   cronometro()
 	{
 		//Control de los efectos de pocion
-
 		if(this.pocionGreen.EfectoActivo)
 		{
 			this.pocionGreen.timeEfecto++;
@@ -73,6 +72,7 @@ export default class BootScene extends Phaser.Scene {
 		}
 
 		if(this.pocionBlue.EfectoActivo)
+
 		{
 			this.pocionBlue.timeEfecto++;
 
@@ -83,9 +83,7 @@ export default class BootScene extends Phaser.Scene {
 				this.pocionBlue.EfectoActivo = false;
 			}
 		}
-
 		//Control del aguante
-
 		if (this.player.recuperacion)
 		{
 			this.player.timeRecuperacion-=1;
@@ -99,18 +97,12 @@ export default class BootScene extends Phaser.Scene {
 		}
 
 		//Control de bombas
-
 		if (this.bomb.Bactiva)
-		{
-			this.bomb.tiempoB--;
-		}
+		{ this.bomb.tiempoB--; }
 		else if (this.bomb.cooldown > 0)
-		{
-			this.bomb.cooldown--;
-		}
+		{ this.bomb.cooldown--; }
 
 		//Destruye la explosion
-
 		if (this.fire.visible)
 		{
 			this.fire.tiempoF--;
@@ -123,7 +115,6 @@ export default class BootScene extends Phaser.Scene {
 		}
 
 		//Control de carrera de jabalí
-
 		if (this.jabali.descansar == false)
 		{
 			if (this.jabali.sprint)
@@ -159,28 +150,27 @@ export default class BootScene extends Phaser.Scene {
 		}
 
 		//Control de disparo del ojo
-
-		if (this.disparo.disp == false)
-		{
-			this.disparo.dispTiempo--;
-			this.ojo.body.setSize(this.ojo.body.OriginalSizeW, this.ojo.OriginalSizeH, true);
-
-			if (this.disparo.dispTiempo == 0)
-			{
-				this.disparo.disp = true;
-				this.disparo.dispTiempo = 2;
-			}
-		}
-
-		if (this.disparo.disp)
+		if (this.ojo.DispAct)
 		{
 			this.disparo.dispTiempoActivo--;
 
 			if (this.disparo.dispTiempoActivo == 0)
 			{
 				this.disparo.dispTiempoActivo = 2;
-				this.disparo.disp = false;
+				this.ojo.DispAct = false;
 				this.ojo.body.setSize(this.ojo.body.width * 6, this.ojo.body.height * 6, true);
+			}
+		}
+		else
+		{
+			this.disparo.dispTiempo--;
+			this.ojo.body.setSize(this.ojo.body.OriginalSizeW, this.ojo.OriginalSizeH, true);
+
+			if (this.disparo.dispTiempo == 0)
+			{
+				this.ojo.DispAct = true;
+				this.disparo.dispTiempo = 3;
+				this.ojo.invencible = false;
 			}
 		}
 	}
@@ -234,6 +224,11 @@ export default class BootScene extends Phaser.Scene {
 					this.pocionYellow.almacenado--;
 				}
 	    }
+	}
+
+	invencibleFunc()
+	{
+		this.ojo.invencible = true;
 	}
 }
 
