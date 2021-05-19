@@ -7,6 +7,8 @@ export default class BootScene extends Phaser.Scene {
 	{
 		this.load.image("fuego","assets/images/exp.png");
 		this.load.atlas("object_sprites", "assets/images/objectssheet.png", "assets/images/objectssheet_atlas.json");
+		this.load.image("ojo","assets/images/eye.png");
+		this.load.image("disparo","assets/images/Shoot.png");
 		this.load.spritesheet('avatar', 'assets/images/avatar.png', { frameWidth: 32, frameHeight: 32 });
 		this.load.tilemapTiledJSON('LastRoom', 'assets/TileMaps/LastRoom.json');
 		this.load.image('tiles', 'assets/TileMaps/NatureTileset.png');
@@ -27,19 +29,26 @@ export default class BootScene extends Phaser.Scene {
 		this.bomb = new Bomb(this, 0, 0, 'object_sprites', 'bomb');
 
 		//Creación de enemigos
-		this.jabali = new Jabali(this, 500, 100, 'avatar', 'sprite_01');
 
-		//Eventos o configuraciones utiles
-		this.Teclas.call(this);
-		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
-		this.physics.add.collider(this.player, this.layer2);
-		this.physics.world.createDebugGraphic();
+		//Creación de jabalí
+		this.jabali = new Jabali(this, 500, 100, 'ojo');
+
+		//Creación de ojo y su disparo
+		this.ojo = new Eye(this, 400, 100, 'ojo');
+		this.disparo = new Shoot(this, this.ojo.x, this.ojo.y, 'disparo');
 
 		//Creación de Inventario
 		this.pocionYellow = new Inventario(this, this.game.config.width, 0, 'object_sprites', 'pocionyellow');
 		this.pocionBlue = new Inventario(this, this.pocionYellow.x - 50, 0, 'object_sprites', 'pocionblue');
 		this.pocionGreen = new Inventario(this, this.pocionBlue.x - 50, 0, 'object_sprites', 'pociongreen');
 		this.pocionRed = new Inventario(this, this.pocionGreen.x - 50, 0, 'object_sprites', 'pocionred');
+
+		//Eventos o configuraciones utiles
+		this.Teclas.call(this);
+		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
+		this.physics.add.collider(this.player, this.layer2);
+		this.physics.world.createDebugGraphic();
+		this.physics.add.overlap(this.player, this.ojo, this.ojo.Invencible(), null, this.scene);
 	}
 
 	update()
@@ -148,6 +157,32 @@ export default class BootScene extends Phaser.Scene {
 					}
 				}
 		}
+
+		//Control de disparo del ojo
+
+		if (this.disparo.disp == false)
+		{
+			this.disparo.dispTiempo--;
+			this.ojo.body.setSize(this.ojo.body.OriginalSizeW, this.ojo.OriginalSizeH, true);
+
+			if (this.disparo.dispTiempo == 0)
+			{
+				this.disparo.disp = true;
+				this.disparo.dispTiempo = 2;
+			}
+		}
+
+		if (this.disparo.disp)
+		{
+			this.disparo.dispTiempoActivo--;
+
+			if (this.disparo.dispTiempoActivo == 0)
+			{
+				this.disparo.dispTiempoActivo = 2;
+				this.disparo.disp = false;
+				this.ojo.body.setSize(this.ojo.body.width * 6, this.ojo.body.height * 6, true);
+			}
+		}
 	}
 
   Teclas()
@@ -204,6 +239,8 @@ export default class BootScene extends Phaser.Scene {
 
 import Player from "./Characters/Player.js";
 import Jabali from "./Characters/Jabali.js";
+import Eye from "./Characters/eye.js";
+import Shoot from "./GameObjects/Shoot.js";
 import Bomb from "./GameObjects/Bomb.js";
 import Fire from "./GameObjects/Fire.js";
 import Inventario from "./GameObjects/Inventario.js";
