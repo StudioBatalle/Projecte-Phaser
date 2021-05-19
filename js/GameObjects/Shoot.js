@@ -8,14 +8,13 @@ export default class Shoot extends Phaser.GameObjects.Sprite{
     this.vel = 4;
     this.damageMax = 4;
 
-    //variables del ojo
-
-    this.disp = false;
-    this.dispTiempo = 2;
-    this.dispTiempoActivo = 2;
-
     this.player = this.scene.player;
     this.ojo = this.scene.ojo;
+
+    //variables del ojo
+
+    this.dispTiempo = 2;
+    this.dispTiempoActivo = 2;
   }
 
   update()

@@ -9,8 +9,8 @@ export default class Eye extends Phaser.GameObjects.Sprite{
     	//Propiedades del ojo
 
     	this.vidaMax = 3;
-      this.vel = 3;
-      this.invencible = false;
+		this.vel = 3;
+		this.invencible = false;
 
       this.player = this.scene.player;
 
@@ -18,6 +18,7 @@ export default class Eye extends Phaser.GameObjects.Sprite{
 
       this.OriginalSizeW = this.body.width;
       this.OriginalSizeH = this.body.height;
+      this.DispAct = false;
 
       this.dirX = this.player.x - this.x;
       this.dirY = this.player.y - this.y;
@@ -51,7 +52,7 @@ export default class Eye extends Phaser.GameObjects.Sprite{
 
   Invencible()
 	{
-		if (this.disparo.disp == false)
+		if (this.DispAct == false)
 		{
 			this.ojo.invencible = true;
 		}
