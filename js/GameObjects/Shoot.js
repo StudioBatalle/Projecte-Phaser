@@ -40,4 +40,31 @@ export default class Shoot extends Phaser.GameObjects.Sprite{
       this.y += this.vel * this.dir.y;
     }
   }
+
+  EyeShoot()
+  {
+    if (this.ojo.DispAct)
+		{
+			this.dispTiempoActivo--;
+
+			if (this.dispTiempoActivo == 0)
+			{
+				this.dispTiempoActivo = 2;
+				this.ojo.DispAct = false;
+				this.ojo.body.setSize(this.ojo.body.width * 6, this.ojo.body.height * 6, true);
+			}
+		}
+		else
+		{
+			this.dispTiempo--;
+			this.ojo.body.setSize(this.ojo.body.OriginalSizeWt, this.ojo.OriginalSizeHg, true);
+
+			if (this.dispTiempo == 0)
+			{
+				this.ojo.DispAct = true;
+				this.dispTiempo = 3;
+				this.ojo.invencible = false;
+			}
+		}
+  }
 }

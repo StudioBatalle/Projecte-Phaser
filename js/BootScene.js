@@ -7,9 +7,9 @@ export default class BootScene extends Phaser.Scene {
 	{
 		this.load.image("fuego","assets/images/exp.png");
 		this.load.atlas("object_sprites", "assets/images/objectssheet.png", "assets/images/objectssheet_atlas.json");
-		this.load.image("ojo","assets/images/eye.png");
+		this.load.atlas("ojo","assets/images/eyefrontsheet.png", "assets/images/eyefrontsheet.json");
 		this.load.image("disparo","assets/images/Shoot.png");
-		this.load.spritesheet('avatar', 'assets/images/avatar.png', { frameWidth: 32, frameHeight: 32 });
+		this.load.atlas('avatar', 'assets/images/avatar.png', "assets/images/avatar.json");
 		this.load.tilemapTiledJSON('LastRoom', 'assets/TileMaps/LastRoom.json');
 		this.load.image('tiles', 'assets/TileMaps/NatureTileset.png');
 	}
@@ -72,7 +72,6 @@ export default class BootScene extends Phaser.Scene {
 		}
 
 		if(this.pocionBlue.EfectoActivo)
-
 		{
 			this.pocionBlue.timeEfecto++;
 
@@ -83,36 +82,15 @@ export default class BootScene extends Phaser.Scene {
 				this.pocionBlue.EfectoActivo = false;
 			}
 		}
-		//Control del aguante
-		if (this.player.recuperacion)
-		{
-			this.player.timeRecuperacion-=1;
 
-			if (this.player.timeRecuperacion == 0)
-			{
-				this.player.aguante = this.player.aguanteMax;
-				this.player.timeRecuperacion = 15;
-				this.player.recuperacion = false;
-			}
-		}
+		//Control del aguante
+		this.player.AguanteControl();
 
 		//Control de bombas
-		if (this.bomb.Bactiva)
-		{ this.bomb.tiempoB--; }
-		else if (this.bomb.cooldown > 0)
-		{ this.bomb.cooldown--; }
+		this.bomb.Explosion();
 
 		//Destruye la explosion
-		if (this.fire.visible)
-		{
-			this.fire.tiempoF--;
-
-			if (this.fire.tiempoF < 0)
-			{
-				this.fire.tiempoF = 5;
-				this.fire.visible = false;
-			}
-		}
+		this.fire.DamgeArea();
 
 		//Control de carrera de jabalí
 		if (this.jabali.descansar == false)
@@ -150,29 +128,7 @@ export default class BootScene extends Phaser.Scene {
 		}
 
 		//Control de disparo del ojo
-		if (this.ojo.DispAct)
-		{
-			this.disparo.dispTiempoActivo--;
-
-			if (this.disparo.dispTiempoActivo == 0)
-			{
-				this.disparo.dispTiempoActivo = 2;
-				this.ojo.DispAct = false;
-				this.ojo.body.setSize(this.ojo.body.width * 6, this.ojo.body.height * 6, true);
-			}
-		}
-		else
-		{
-			this.disparo.dispTiempo--;
-			this.ojo.body.setSize(this.ojo.body.OriginalSizeW, this.ojo.OriginalSizeH, true);
-
-			if (this.disparo.dispTiempo == 0)
-			{
-				this.ojo.DispAct = true;
-				this.disparo.dispTiempo = 3;
-				this.ojo.invencible = false;
-			}
-		}
+		this.disparo.EyeShoot();
 	}
 
   Teclas()
@@ -184,7 +140,7 @@ export default class BootScene extends Phaser.Scene {
 		this.Key4 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
   }
 
-	InventarioChange()
+	InventarioAccess()
 	{
 		var JustDown = Phaser.Input.Keyboard.JustDown;
 

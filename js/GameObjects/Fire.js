@@ -9,4 +9,18 @@ export default class Fire extends Phaser.GameObjects.Sprite{
       this.damage = 15;
       this.tiempoF = 5;
     }
+
+    DamgeArea()
+    {
+      if (this.visible)
+  		{
+  			this.tiempoF--;
+
+  			if (this.tiempoF < 0)
+  			{
+  				this.tiempoF = 5;
+  				this.visible = false;
+  			}
+  		}
+    }
   }

@@ -19,37 +19,45 @@ export default class Bomb extends Phaser.GameObjects.Sprite{
         this.keys = this.scene.input.keyboard.addKeys({ BombT: SPACE });
 		}
 
-			update()
+		update()
+		{
+      const { keys } = this;
+
+			if (keys.BombT.isDown && this.cooldown == 0 && this.player.aguante > 0)
 			{
-        const { keys } = this;
+				this.x = this.player.x;
+				this.y = this.player.y;
+				this.visible = true;
+				this.cooldown = 5;
+				this.Bactiva = true;
 
-				if (keys.BombT.isDown && this.cooldown == 0 && this.player.aguante > 0)
+				if (this.player.aguante <= 75)
 				{
-					this.x = this.player.x;
-					this.y = this.player.y;
-					this.visible = true;
-					this.cooldown = 25;
-					this.Bactiva = true;
-
-					if (this.player.aguante <= 75)
-					{
-						this.player.aguante-= this.player.aguante;
-					}
-					else
-					{
-						this.player.aguante-=75;
-					}
+					this.player.aguante-= this.player.aguante;
 				}
-
-				if (this.tiempoB < 0)
+				else
 				{
-					this.visible = false;
-					this.Bactiva = false;
-					this.tiempoB = 2;
-
-					this.fire.x = this.x;
-					this.fire.y = this.y;
-					this.fire.visible = true;
+					this.player.aguante-=75;
 				}
 			}
+
+			if (this.tiempoB < 0)
+			{
+				this.visible = false;
+				this.Bactiva = false;
+				this.tiempoB = 2;
+
+				this.fire.x = this.x;
+				this.fire.y = this.y;
+				this.fire.visible = true;
+			}
+		}
+
+    Explosion()
+    {
+      if (this.Bactiva)
+  		{ this.tiempoB--; }
+  		else if (this.cooldown > 0)
+  		{ this.cooldown--; }
+    }
 }

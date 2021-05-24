@@ -14,6 +14,6 @@ export default class CaveScene extends BootScene {
 		this.jabali.update();
 		this.ojo.update();
 		this.disparo.update();
-		this.InventarioChange();
+		this.InventarioAccess();
 	}
 }

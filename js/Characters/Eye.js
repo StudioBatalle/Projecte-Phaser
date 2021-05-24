@@ -4,7 +4,9 @@ export default class Eye extends Phaser.GameObjects.Sprite{
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
       this.setOrigin(0.5, 0.5);
-      this.body.setSize(this.body.width, this.body.height, true);
+      this.OriginalSizeWt = this.body.width / 2;
+      this.OriginalSizeHg = this.body.height / 2;
+      this.body.setSize(this.OriginalSizeWt, this.OriginalSizeHg, true);
 
     	//Propiedades del ojo
     	this.vidaMax = 3;
@@ -14,8 +16,6 @@ export default class Eye extends Phaser.GameObjects.Sprite{
       this.player = this.scene.player;
 
       //Variables del ojo
-      this.OriginalSizeW = this.body.width;
-      this.OriginalSizeH = this.body.height;
       this.DispAct = false;
       this.dirX = this.player.x - this.x;
       this.dirY = this.player.y - this.y;
