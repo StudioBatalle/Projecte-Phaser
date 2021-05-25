@@ -21,7 +21,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
     	this.damage = this.thisdamageMax;
     	this.aguante = this.aguanteMax;
 
-    	this.vel = 3;
+    	this.vel = 2;
     	this.velS = this.vel;
     	this.recuperacion = false;
     	this.timeRecuperacion = 15;
@@ -149,7 +149,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
 
     if (keys.Sprint.isDown && this.aguante > 0)
     {
-      this.velS = this.vel * 2.5;
+      this.velS = this.vel * 2;
       this.run = true;
       this.aguante--;
     }
@@ -184,11 +184,11 @@ export default class Player extends Phaser.GameObjects.Sprite{
     }
     else if (this.idle)
     {
-        if (this.dirLast == 1)
+        if (this.dirLast != 3)
         {
           this.anims.play("idleLF", true);
         }
-        else if (this.dirLast == 3)
+        else
         {
           this.anims.play("idleR", true);
         }

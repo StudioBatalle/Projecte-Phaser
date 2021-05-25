@@ -10,7 +10,7 @@ export default class Eye extends Phaser.GameObjects.Sprite{
 
     	//Propiedades del ojo
     	this.vidaMax = 3;
-  		this.vel = 3;
+  		this.vel = 2;
       this.invencible = false;
 
       this.player = this.scene.player;

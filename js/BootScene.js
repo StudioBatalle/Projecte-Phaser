@@ -6,10 +6,12 @@ export default class BootScene extends Phaser.Scene {
   preload()
 	{
 		this.load.image("fuego","assets/images/exp.png");
-		this.load.atlas("object_sprites", "assets/images/objectssheet.png", "assets/images/objectssheet_atlas.json");
+		this.load.atlas("objectsprites", "assets/images/objectssheet.png", "assets/images/objectssheet.json");
 		this.load.atlas("ojo","assets/images/eyefrontsheet.png", "assets/images/eyefrontsheet.json");
+		this.load.atlas("jabali","assets/images/jabali.png", "assets/images/jabali.json");
 		this.load.image("disparo","assets/images/Shoot.png");
 		this.load.atlas('avatar', 'assets/images/avatar.png', "assets/images/avatar.json");
+		this.load.audio('music','assets/sounds/BgMusic.mp3');
 		this.load.tilemapTiledJSON('LastRoom', 'assets/TileMaps/LastRoom.json');
 		this.load.image('tiles', 'assets/TileMaps/NatureTileset.png');
 	}
@@ -25,23 +27,16 @@ export default class BootScene extends Phaser.Scene {
 
 		//Creación de personaje con sus mecanicas
 		this.fire = new Fire(this, 0, 0, 'fuego');
-		this.player = new Player(this, 400, 200, 'avatar', 'sprite_01');
-		this.bomb = new Bomb(this, 0, 0, 'object_sprites', 'bomb');
+		this.player = new Player(this, 400, 200, 'avatar', 'sprite_0.png');
+		this.bomb = new Bomb(this, 0, 0, 'objectsprites', 'objects_5.png');
 
 		//Creación de enemigos
-
 		//Creación de jabalí
-		this.jabali = new Jabali(this, 500, 100, 'ojo');
+		this.jabali = new Jabali(this, 500, 100, 'jabali', 'sprite_0.png');
 
 		//Creación de ojo y su disparo
 		this.ojo = new Eye(this, 400, 400, 'ojo');
 		this.disparo = new Shoot(this, this.ojo.x, this.ojo.y, 'disparo');
-
-		//Creación de Inventario
-		this.pocionYellow = new Inventario(this, this.game.config.width, 0, 'object_sprites', 'pocionyellow');
-		this.pocionBlue = new Inventario(this, this.pocionYellow.x - 50, 0, 'object_sprites', 'pocionblue');
-		this.pocionGreen = new Inventario(this, this.pocionBlue.x - 50, 0, 'object_sprites', 'pociongreen');
-		this.pocionRed = new Inventario(this, this.pocionGreen.x - 50, 0, 'object_sprites', 'pocionred');
 
 		//Eventos o configuraciones utiles
 		this.Teclas.call(this);
@@ -49,17 +44,23 @@ export default class BootScene extends Phaser.Scene {
 		this.physics.add.overlap(this.player, this.ojo, this.invencibleFunc, null, this);
 		this.physics.add.collider(this.player, this.layer2);
 		this.physics.world.createDebugGraphic();
+		this.music = this.sound.add('music');
+		this.cameras.main.setBounds(0, 0, 800 * 2, 600);
+		this.physics.world.setBounds(0, 0, 800 * 2, 600);
+
 	}
 
 	update()
 	{
-		 this.scene.start('CaveLevel');
+		this.scene.moveDown('CaveLevel');
+		this.scene.launch('CaveLevel').launch('HUDScreen').stop();
+		this.music.play({ loop: true });
 	}
 
   cronometro()
 	{
 		//Control de los efectos de pocion
-		if(this.pocionGreen.EfectoActivo)
+		/*if(this.pocionGreen.EfectoActivo)
 		{
 			this.pocionGreen.timeEfecto++;
 
@@ -81,7 +82,7 @@ export default class BootScene extends Phaser.Scene {
 				this.pocionBlue.timeEfecto = 0;
 				this.pocionBlue.EfectoActivo = false;
 			}
-		}
+		}*/
 
 		//Control del aguante
 		this.player.AguanteControl();
@@ -93,39 +94,7 @@ export default class BootScene extends Phaser.Scene {
 		this.fire.DamgeArea();
 
 		//Control de carrera de jabalí
-		if (this.jabali.descansar == false)
-		{
-			if (this.jabali.sprint)
-			{
-					this.jabali.sprintTiempo--;
-
-					if (this.jabali.sprintTiempo == 0)
-					{
-							this.jabali.sprintTiempo = 4;
-							this.jabali.sprint = false;
-							this.jabali.descansar = true;
-					}
-			}
-		}
-		else
-		{
-				this.jabali.descansarTiempo--;
-
-				if (this.jabali.descansarTiempo == 0)
-				{
-					this.jabali.descansarTiempo = 2;
-					this.jabali.descansar = false;
-
-					if (this.jabali.dirDer)
-					{
-						this.jabali.dirDer = false;
-					}
-					else
-					{
-							this.jabali.dirDer = true;
-					}
-				}
-		}
+		this.jabali.AtaqueJabali();
 
 		//Control de disparo del ojo
 		this.disparo.EyeShoot();
@@ -142,7 +111,7 @@ export default class BootScene extends Phaser.Scene {
 
 	InventarioAccess()
 	{
-		var JustDown = Phaser.Input.Keyboard.JustDown;
+		/*var JustDown = Phaser.Input.Keyboard.JustDown;
 
 	    if (JustDown(this.Key1))
 			{
@@ -179,12 +148,15 @@ export default class BootScene extends Phaser.Scene {
 					this.player.timeRecuperacion = 15;
 					this.pocionYellow.almacenado--;
 				}
-	    }
+	    }*/
 	}
 
 	invencibleFunc()
 	{
-		this.ojo.invencible = true;
+		if (this.ojo.DispAct == false)
+		{
+			this.ojo.invencible = true;
+		}
 	}
 }
 
