@@ -47,7 +47,7 @@ export default class BootScene extends Phaser.Scene {
 		this.music = this.sound.add('music');
 		this.cameras.main.setBounds(0, 0, 800 * 2, 600);
 		this.physics.world.setBounds(0, 0, 800 * 2, 600);
-
+		//this.player.setCollideWorldBounds(true);
 	}
 
 	update()

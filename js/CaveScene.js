@@ -15,5 +15,12 @@ export default class CaveScene extends BootScene {
 		this.ojo.update();
 		this.disparo.update();
 		this.InventarioAccess();
+
+		if (this.Key2.isDown)
+		{
+			this.scene.stop('CaveLevel');
+			this.scene.moveDown('ForrestLevel');
+			this.scene.launch('ForrestLevel').launch('HUDScreen').stop();
+		}
 	}
 }
