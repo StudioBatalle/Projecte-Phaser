@@ -7,7 +7,7 @@ export default class ForrestScene extends BootScene {
 
 	update()
 	{
-		if (this.Key1.isDown)
+		if (this.KeyO.isDown)
 		{
 			this.scene.stop('ForrestLevel');
 			this.scene.moveDown('CaveLevel');

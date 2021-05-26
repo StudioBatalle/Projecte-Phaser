@@ -11,10 +11,10 @@ export default class Player extends Phaser.GameObjects.Sprite{
 
     	//Para controlar mejor las estadisticas y asi poder mejorarlas cuando se pase el primer nivel
 
-    	this.vidaMax = 10;
+    	this.vidaMax = 4;
     	this.resistenciaMax = 2;
     	this.damageMax = 2;
-    	this.aguanteMax = 150;
+    	this.aguanteMax = 80;
 
     	this.vida = this.vidaMax / 2; //Estadistica cambiada para visualizar el efecto de pocion
     	this.resistencia = this.resistenciaMax;
@@ -24,7 +24,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
     	this.vel = 2;
     	this.velS = this.vel;
     	this.recuperacion = false;
-    	this.timeRecuperacion = 15;
+    	this.timeRecuperacion = 5;
 
       this.dirLast = 1;
       this.idle = false;
@@ -275,7 +275,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
       if (this.timeRecuperacion == 0)
       {
         this.aguante = this.aguanteMax;
-        this.timeRecuperacion = 15;
+        this.timeRecuperacion = 5;
         this.recuperacion = false;
       }
     }

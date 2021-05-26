@@ -102,54 +102,13 @@ export default class BootScene extends Phaser.Scene {
 
   Teclas()
 	{
-    this.Change = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
+    this.KeyP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
+		this.KeyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O);
 		this.Key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
 		this.Key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
 		this.Key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 		this.Key4 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
   }
-
-	InventarioAccess()
-	{
-		/*var JustDown = Phaser.Input.Keyboard.JustDown;
-
-	    if (JustDown(this.Key1))
-			{
-				if (this.player.vida < this.player.vidaMax && this.pocionRed.almacenado > 0)
-				{
-					this.player.vida++;
-					this.pocionRed.almacenado--;
-				}
-	    }
-			else if (JustDown(this.Key2))
-			{
-				if (this.pocionGreen.almacenado > 0 && this.pocionGreen.EfectoActivo == false && this.pocionBlue.EfectoActivo == false)
-				{
-						this.player.damage*=2;
-						this.pocionGreen.EfectoActivo = true;
-						this.pocionGreen.almacenado--;
-				}
-	    }
-			else if (JustDown(this.Key3))
-			{
-				if (this.pocionBlue.almacenado > 0 && this.pocionBlue.EfectoActivo == false && this.pocionGreen.EfectoActivo == false)
-				{
-					this.player.resistencia*=2;
-					this.pocionBlue.EfectoActivo = true;
-					this.pocionBlue.almacenado--;
-				}
-	    }
-			else if (JustDown(this.Key4))
-			{
-				if (this.pocionYellow.almacenado > 0)
-				{
-					this.player.aguante+=50;
-					this.player.recuperacion = false;
-					this.player.timeRecuperacion = 15;
-					this.pocionYellow.almacenado--;
-				}
-	    }*/
-	}
 
 	invencibleFunc()
 	{

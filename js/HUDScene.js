@@ -9,6 +9,7 @@ export default class HUDScene extends Phaser.Scene {
 
 	preload()
 	{
+		//Inventario
 		this.load.atlas("objectsprites", "assets/images/objectssheet.png", "assets/images/objectssheet.json");
 
 		//indicadores
@@ -23,6 +24,14 @@ export default class HUDScene extends Phaser.Scene {
 		this.pocionBlue = new Inventario(this, this.pocionYellow.x - 50, 25, 'objectsprites', 'objects_2.png');
 		this.pocionGreen = new Inventario(this, this.pocionBlue.x - 50, 25, 'objectsprites', 'objects_3.png');
 		this.pocionRed = new Inventario(this, this.pocionGreen.x - 50, 25, 'objectsprites', 'objects_0.png');
+
+		//Variables de otras escenas
+		this.cave = this.scene.get("CaveLevel");
+		this.player = this.cave.player;
+		this.Key1 = this.cave.Key1;
+		this.Key2 = this.cave.Key2;
+		this.Key3 = this.cave.Key3;
+		this.Key4 = this.cave.Key4;
 
 		//indicadores vida y aguante
 		this.ivida = this.add.sprite(50, 25, 'vida');
@@ -305,201 +314,247 @@ export default class HUDScene extends Phaser.Scene {
 
 	update()
 	{
-		this.nivvida = 3;
-		this.vida = 6;
-		this.nivaguante = 2;
-		this.aguante = 15;
-		//vida y aguante
 		//vida
-		if (this.nivvida == 3)
+		if (this.player.vidaMax == 6)
 		{
-			if(this.vida == 6)
+			if(this.player.vida == 6)
 			{
 				this.ivida.anims.play('v3-6', true);
 			}
-			if(this.vida == 5)
+			if(this.player.vida == 5)
 			{
 				this.ivida.anims.play('v3-5', true);
 			}
-			if(this.vida == 4)
+			if(this.player.vida == 4)
 			{
 				this.ivida.anims.play('v3-4', true);
 			}
-			if(this.vida == 3)
+			if(this.player.vida == 3)
 			{
 				this.ivida.anims.play('v3-3', true);
 			}
-			if(this.vida == 2)
+			if(this.player.vida == 2)
 			{
 				this.ivida.anims.play('v3-2', true);
 			}
-			if(this.vida == 1)
+			if(this.player.vida == 1)
 			{
 				this.ivida.anims.play('v3-1', true);
 			}
-			if(this.vida == 0)
+			if(this.player.vida == 0)
 			{
 				this.ivida.anims.play('v3-0', true);
 			}
 		}
-		else if (this.nivvida == 2)
+		else if (this.player.vidaMax == 5)
 		{
-			if(this.vida == 5)
+			if(this.player.vida == 5)
 			{
 				this.ivida.anims.play('v2-5', true);
 			}
-			if(this.vida == 4)
+			if(this.player.vida == 4)
 			{
 				this.ivida.anims.play('v2-4', true);
 			}
-			if(this.vida == 3)
+			if(this.player.vida == 3)
 			{
 				this.ivida.anims.play('v2-3', true);
 			}
-			if(this.vida == 2)
+			if(this.player.vida == 2)
 			{
 				this.ivida.anims.play('v2-2', true);
 			}
-			if(this.vida == 1)
+			if(this.player.vida == 1)
 			{
 				this.ivida.anims.play('v2-1', true);
 			}
-			if(this.vida == 0)
+			if(this.player.vida == 0)
 			{
 				this.ivida.anims.play('v2-0', true);
 			}
 		}
-		else if (this.nivvida == 1)
+		else if (this.player.vidaMax == 4)
 		{
-			if(this.vida == 4)
+			if(this.player.vida == 4)
 			{
 				this.ivida.anims.play('v1-4', true);
 			}
-			if(this.this.vida == 3)
+			if(this.player.vida == 3)
 			{
 				this.ivida.anims.play('v1-3', true);
 			}
-			if(this.vida == 2)
+			if(this.player.vida == 2)
 			{
 				this.ivida.anims.play('v1-2', true);
 			}
-			if(this.vida == 1)
+			if(this.player.vida == 1)
 			{
 				this.ivida.anims.play('v1-1', true);
 			}
-			if(this.vida == 0)
+			if(this.player.vida == 0)
 			{
 				this.ivida.anims.play('v1-0', true);
 			}
 		}
+
 		//aguante
-		if (this.nivaguante == 2)
+		if (this.player.aguanteMax == 150)
 		{
-			if(this.aguante == 15)
+			if(this.player.aguante == 150)
 			{
 				this.iaguante.anims.play('a2-15', true);
 			}
-			if(this.aguante == 14)
+			if(this.player.aguante == 140)
 			{
 				this.iaguante.anims.play('a2-14', true);
 			}
-			if(this.aguante == 13)
+			if(this.player.aguante == 130)
 			{
 				this.iaguante.anims.play('a2-13', true);
 			}
-			if(this.aguante == 12)
+			if(this.player.aguante == 120)
 			{
 				this.iaguante.anims.play('a2-12', true);
 			}
-			if(this.aguante == 11)
+			if(this.player.aguante == 110)
 			{
 				this.iaguante.anims.play('a2-11', true);
 			}
-			if(this.aguante == 10)
+			if(this.player.aguante == 100)
 			{
 				this.iaguante.anims.play('a2-10', true);
 			}
-			if(this.aguante == 9)
+			if(this.player.aguante == 90)
 			{
 				this.iaguante.anims.play('a2-9', true);
 			}
-			if(this.aguante == 8)
+			if(this.player.aguante == 80)
 			{
 				this.iaguante.anims.play('a2-8', true);
 			}
-			if(this.aguante == 7)
+			if(this.player.aguante == 70)
 			{
 				this.iaguante.anims.play('a2-7', true);
 			}
-			if(this.aguante == 6)
+			if(this.player.aguante == 60)
 			{
 				this.iaguante.anims.play('a2-6', true);
 			}
-			if(this.aguante == 5)
+			if(this.player.aguante == 50)
 			{
 				this.iaguante.anims.play('a2-5', true);
 			}
-			if(this.aguante == 4)
+			if(this.player.aguante == 40)
 			{
 				this.iaguante.anims.play('a2-4', true);
 			}
-			if(this.aguante == 3)
+			if(this.player.aguante == 30)
 			{
 				this.iaguante.anims.play('a2-3', true);
 			}
-			if(this.aguante == 2)
+			if(this.player.aguante == 20)
 			{
 				this.iaguante.anims.play('a2-2', true);
 			}
-			if(this.aguante == 1)
+			if(this.player.aguante == 10)
 			{
 				this.iaguante.anims.play('a2-1', true);
 			}
-			if(this.aguante == 0)
+			if(this.player.aguante == 0)
 			{
 				this.iaguante.anims.play('a2-0', true);
 			}
+			if(this.player.recuperacion)
+			{
+				this.iaguante.anims.play('a2--1', true);
+			}
 		}
-		else if (this.nivaguante == 1)
+		else if (this.player.aguanteMax == 80)
 		{
-			if(this.aguante == 8)
+			if(this.player.aguante == 80)
 			{
 				this.iaguante.anims.play('a1-8', true);
 			}
-			if(this.aguante == 7)
+			if(this.player.aguante == 70)
 			{
 				this.iaguante.anims.play('a1-7', true);
 			}
-			if(this.aguante == 6)
+			if(this.player.aguante == 60)
 			{
 				this.iaguante.anims.play('a1-6', true);
 			}
-			if(this.aguante == 5)
+			if(this.player.aguante == 50)
 			{
 				this.iaguante.anims.play('a1-5', true);
 			}
-			if(this.aguante == 4)
+			if(this.player.aguante == 40)
 			{
 				this.iaguante.anims.play('a1-4', true);
 			}
-			if(this.aguante == 3)
+			if(this.player.aguante == 30)
 			{
 				this.iaguante.anims.play('a1-3', true);
 			}
-			if(this.aguante == 2)
+			if(this.player.aguante == 20)
 			{
 				this.iaguante.anims.play('a1-2', true);
 			}
-			if(this.aguante == 1)
+			if(this.player.aguante == 10)
 			{
 				this.iaguante.anims.play('a1-1', true);
 			}
-			if(this.aguante == 0)
+			if(this.player.aguante == 0)
 			{
 				this.iaguante.anims.play('a1-0', true);
 			}
+			if(this.player.recuperacion)
+			{
+				this.iaguante.anims.play('a1--1', true);
+			}
 		}
 
-		//this.scenePrincipal.player.update();
+		this.InventarioAccess();
+	}
+
+	InventarioAccess()
+	{
+		var JustDown = Phaser.Input.Keyboard.JustDown;
+
+	    if (JustDown(this.Key1))
+			{
+				if (this.player.vida < this.player.vidaMax && this.pocionRed.almacenado > 0)
+				{
+					this.player.vida++;
+					this.pocionRed.almacenado--;
+				}
+	    }
+			else if (JustDown(this.Key2))
+			{
+				if (this.pocionGreen.almacenado > 0 && this.pocionGreen.EfectoActivo == false && this.pocionBlue.EfectoActivo == false)
+				{
+						this.player.damage*=2;
+						this.pocionGreen.EfectoActivo = true;
+						this.pocionGreen.almacenado--;
+				}
+	    }
+			else if (JustDown(this.Key3))
+			{
+				if (this.pocionBlue.almacenado > 0 && this.pocionBlue.EfectoActivo == false && this.pocionGreen.EfectoActivo == false)
+				{
+					this.player.resistencia*=2;
+					this.pocionBlue.EfectoActivo = true;
+					this.pocionBlue.almacenado--;
+				}
+	    }
+			else if (JustDown(this.Key4))
+			{
+				if (this.pocionYellow.almacenado > 0)
+				{
+					this.player.aguante+=50;
+					this.player.recuperacion = false;
+					this.player.timeRecuperacion = 15;
+					this.pocionYellow.almacenado--;
+				}
+	    }
 	}
 }
