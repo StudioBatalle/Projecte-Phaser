@@ -1,6 +1,6 @@
 export default class BootScene extends Phaser.Scene {
-	constructor(config) {
-		super(config);
+	constructor(game) {
+		super(game);
 	}
 
   preload()
