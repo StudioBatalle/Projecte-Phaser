@@ -54,27 +54,27 @@ export default class HUDScene extends Phaser.Scene {
 			{
 				this.ivida.anims.play('v3-6', true);
 			}
-			if(this.player.vida == 5)
+			else if(this.player.vida == 5)
 			{
 				this.ivida.anims.play('v3-5', true);
 			}
-			if(this.player.vida == 4)
+			else if(this.player.vida == 4)
 			{
 				this.ivida.anims.play('v3-4', true);
 			}
-			if(this.player.vida == 3)
+			else if(this.player.vida == 3)
 			{
 				this.ivida.anims.play('v3-3', true);
 			}
-			if(this.player.vida == 2)
+			else if(this.player.vida == 2)
 			{
 				this.ivida.anims.play('v3-2', true);
 			}
-			if(this.player.vida == 1)
+			else if(this.player.vida == 1)
 			{
 				this.ivida.anims.play('v3-1', true);
 			}
-			if(this.player.vida == 0)
+			else if(this.player.vida == 0)
 			{
 				this.ivida.anims.play('v3-0', true);
 			}
@@ -85,23 +85,23 @@ export default class HUDScene extends Phaser.Scene {
 			{
 				this.ivida.anims.play('v2-5', true);
 			}
-			if(this.player.vida == 4)
+			else if(this.player.vida == 4)
 			{
 				this.ivida.anims.play('v2-4', true);
 			}
-			if(this.player.vida == 3)
+			else if(this.player.vida == 3)
 			{
 				this.ivida.anims.play('v2-3', true);
 			}
-			if(this.player.vida == 2)
+			else if(this.player.vida == 2)
 			{
 				this.ivida.anims.play('v2-2', true);
 			}
-			if(this.player.vida == 1)
+			else if(this.player.vida == 1)
 			{
 				this.ivida.anims.play('v2-1', true);
 			}
-			if(this.player.vida == 0)
+			else if(this.player.vida == 0)
 			{
 				this.ivida.anims.play('v2-0', true);
 			}
@@ -112,19 +112,19 @@ export default class HUDScene extends Phaser.Scene {
 			{
 				this.ivida.anims.play('v1-4', true);
 			}
-			if(this.player.vida == 3)
+			else if(this.player.vida == 3)
 			{
 				this.ivida.anims.play('v1-3', true);
 			}
-			if(this.player.vida == 2)
+			else if(this.player.vida == 2)
 			{
 				this.ivida.anims.play('v1-2', true);
 			}
-			if(this.player.vida == 1)
+			else if(this.player.vida == 1)
 			{
 				this.ivida.anims.play('v1-1', true);
 			}
-			if(this.player.vida == 0)
+			else if(this.player.vida == 0)
 			{
 				this.ivida.anims.play('v1-0', true);
 			}

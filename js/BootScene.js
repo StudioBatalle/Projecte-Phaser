@@ -37,16 +37,24 @@ export default class BootScene extends Phaser.Scene {
 		//Creación de jabalí
 		this.jabali = new Jabali(this, 500, 100, 'jabali', 'sprite_0.png');
 
+		//Creación de ojo y su disparo
+		for (var i = 0; i < 4; i++)
+		{
+			this.ojo = new Eye(this, 150 * (1 + i), 100 * (i + 1), 'ojo');
+			this.disparo = new Shoot(this, this.ojo.x, this.ojo.y, 'disparo');
+		}
+
 		//Eventos o configuraciones utiles
 		this.Teclas.call(this);
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
-		this.physics.add.overlap(this.player, this.Egroup, this.invencibleFunc, null, this);
-		this.physics.add.overlap(this.fire, this.Egroup, this.Dead, null, this);
+		this.physics.add.overlap(this.player, this.enemyGroup, this.invencibleFunc, null, this);
+		this.physics.add.overlap(this.player, this.shootGroup, this.DamageDisp, null, this);
+		this.physics.add.overlap(this.fire, this.enemyGroup, this.Dead, null, this);
 		this.physics.add.collider(this.player, this.layer2);
 		this.physics.world.createDebugGraphic();
 		this.music = this.sound.add('music');
-		this.cameras.main.setBounds(0, 0, 800 * 2, 600);
-		this.physics.world.setBounds(0, 0, 800 * 2, 600);
+		this.cameras.main.setBounds(0, 0, 800 * 2, 600 * 2);
+		this.physics.world.setBounds(0, 0, 800 * 2, 600 * 2);
 	}
 
 	update()
@@ -70,14 +78,11 @@ export default class BootScene extends Phaser.Scene {
 		//Control de carrera de jabalí
 		this.jabali.AtaqueJabali();
 
-		if (this.EnemyExist)
+		//Control de disparo del ojo
+		for (var i = 0; i < this.enemyGroup.getChildren().length; i++)
 		{
-			//Control de disparo del ojo
-			for (var i = 0; i < this.enemyGroup.getChildren().length; i++)
-			{
-				this.Dgroup = this.shootGroup.getChildren()[i];
-				this.Dgroup.EyeShoot();
-			}
+			this.Dgroup = this.shootGroup.getChildren()[i];
+			this.Dgroup.EyeShoot();
 		}
 	}
 
@@ -94,18 +99,20 @@ export default class BootScene extends Phaser.Scene {
 
 	invencibleFunc(player, Egg)
 	{
-		if (this.EnemyExist)
-		{
-			this.Egg.invencibleEye();
-		}
+		Egg.invencibleEye();
 	}
 
 	Dead(fire, Egg)
 	{
-		if (this.EnemyExist)
+		if (fire.visible && Egg.invencible == false)
 		{
-			Egg.destroy();
+			Egg.dead = true;
 		}
+	}
+
+	DamageDisp(player, Egg)
+	{
+		player.vida = player.vida - Egg.damageMax;
 	}
 }
 

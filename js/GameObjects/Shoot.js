@@ -7,7 +7,7 @@ export default class Shoot extends Phaser.GameObjects.Sprite{
 
     //Propiedades del disparo
     this.vel = 4;
-    this.damageMax = 4;
+    this.damageMax = 1;
 
     this.player = this.scene.player;
     this.ojo = this.scene.ojo;
@@ -21,7 +21,6 @@ export default class Shoot extends Phaser.GameObjects.Sprite{
   update()
   {
     //Control de disparo
-
     if (this.ojo.DispAct == false)
     {
       //Dirreción hacia el jugador
@@ -40,6 +39,11 @@ export default class Shoot extends Phaser.GameObjects.Sprite{
       this.x += this.vel * this.dir.x;
       this.y += this.vel * this.dir.y;
     }
+
+    if(this.ojo.dead)
+    {
+      this.visible = false;
+    }
   }
 
   EyeShoot()
@@ -52,7 +56,8 @@ export default class Shoot extends Phaser.GameObjects.Sprite{
 			{
 				this.dispTiempoActivo = 2;
 				this.ojo.DispAct = false;
-				this.ojo.body.setSize(this.ojo.body.width * 6, this.ojo.body.height * 6, true);
+        this.ojo.invencible = true;
+				this.ojo.body.setSize(this.ojo.body.width * 4, this.ojo.body.height * 4, true);
 			}
 		}
 		else
@@ -65,6 +70,7 @@ export default class Shoot extends Phaser.GameObjects.Sprite{
 				this.ojo.DispAct = true;
 				this.dispTiempo = 3;
 				this.ojo.invencible = false;
+        this.ojo.playerCerca = false;
 			}
 		}
   }

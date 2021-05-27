@@ -11,7 +11,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
 
     	//Para controlar mejor las estadisticas y asi poder mejorarlas cuando se pase el primer nivel
 
-    	this.vidaMax = 4;
+    	this.vidaMax = 6;
     	this.resistenciaMax = 2;
     	this.damageMax = 2;
     	this.aguanteMax = 80;
