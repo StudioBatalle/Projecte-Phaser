@@ -31,90 +31,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
       this.Atq = false;
 
       //Anims de avatar
-      this.anims.create({
-			key: 'idleR',
-			frames: this.anims.generateFrameNames('avatar', { start: 0, end: 2, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 5,
-			repeat: -1
-		});
-		this.anims.create({
-			key: 'idleLF',
-			frames: this.anims.generateFrameNames('avatar', { start: 13, end: 15, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 5,
-			repeat: -1
-		});
-		this.anims.create({
-			key: 'walkRight',
-			frames: this.anims.generateFrameNames('avatar', { start: 0, end: 12, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 15,
-			repeat: -1
-		});
-		this.anims.create({
-			key: 'runRight',
-			frames: this.anims.generateFrameNames('avatar', { start: 0, end: 12, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 25,
-			repeat: -1
-		});
-		this.anims.create({
-			key: 'walkLeft',
-			frames: this.anims.generateFrameNames('avatar', { start: 13, end: 25, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 15,
-			repeat: -1
-		});
-		this.anims.create({
-			key: 'runLeft',
-			frames: this.anims.generateFrameNames('avatar', { start: 13, end: 25, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 25,
-			repeat: -1
-		});
-		this.anims.create({
-			key: 'attackRight',
-			frames: this.anims.generateFrameNames('avatar', { start: 26, end: 30, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 15,
-			repeat: 1
-		});
-		this.anims.create({
-			key: 'attackLeft',
-			frames: this.anims.generateFrameNames('avatar', { start: 31, end: 35, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 15,
-			repeat: 1
-		});
-		this.anims.create({
-			key: 'walkDown',
-			frames: this.anims.generateFrameNames('avatar', { start: 36, end: 52, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 15,
-			repeat: 1
-		});
-		this.anims.create({
-			key: 'runDown',
-			frames: this.anims.generateFrameNames('avatar', { start: 36, end: 52, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 25,
-			repeat: 1
-		});
-		this.anims.create({
-			key: 'walkUp',
-			frames: this.anims.generateFrameNames('avatar', { start: 53, end: 68, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 15,
-			repeat: 1
-		});
-		this.anims.create({
-			key: 'runUp',
-			frames: this.anims.generateFrameNames('avatar', { start: 53, end: 68, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 25,
-			repeat: 1
-		});
-		this.anims.create({
-			key: 'attackUp',
-			frames: this.anims.generateFrameNames('avatar', { start: 69, end: 73, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 15,
-			repeat: 1
-		});
-		this.anims.create({
-			key: 'attackDown',
-			frames: this.anims.generateFrameNames('avatar', { start: 74, end: 79, prefix: 'sprite_', suffix: '.png'}),
-			frameRate: 15,
-			repeat: 1
-		});
+      this.Anims.call(this);
 
       const { W, A, S, D, M, SHIFT } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = this.scene.input.keyboard.addKeys({
@@ -147,7 +64,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
 
     //Control de sprint
 
-    if (keys.Sprint.isDown && this.aguante > 0)
+    if (keys.Sprint.isDown && this.aguante > 0 && (keys.KeyA.isDown || keys.KeyD.isDown || keys.KeyW.isDown || keys.KeyS.isDown))
     {
       this.velS = this.vel * 2;
       this.run = true;
@@ -230,8 +147,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
       this.idle = false;
       this.dirLast = 3;
     }
-
-    if (keys.KeyW.isDown)
+    else if (keys.KeyW.isDown)
     {
       this.y-=this.velS;
 
@@ -279,5 +195,93 @@ export default class Player extends Phaser.GameObjects.Sprite{
         this.recuperacion = false;
       }
     }
+  }
+
+  Anims()
+  {
+    this.anims.create({
+    key: 'idleR',
+    frames: this.anims.generateFrameNames('avatar', { start: 0, end: 2, prefix: 'sprite_', suffix: '.png'}),
+    frameRate: 5,
+    repeat: -1
+  });
+    this.anims.create({
+      key: 'idleLF',
+      frames: this.anims.generateFrameNames('avatar', { start: 13, end: 15, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 5,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'walkRight',
+      frames: this.anims.generateFrameNames('avatar', { start: 0, end: 12, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 15,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'runRight',
+      frames: this.anims.generateFrameNames('avatar', { start: 0, end: 12, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 25,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'walkLeft',
+      frames: this.anims.generateFrameNames('avatar', { start: 13, end: 25, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 15,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'runLeft',
+      frames: this.anims.generateFrameNames('avatar', { start: 13, end: 25, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 25,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'attackRight',
+      frames: this.anims.generateFrameNames('avatar', { start: 26, end: 30, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 15,
+      repeat: 1
+    });
+    this.anims.create({
+      key: 'attackLeft',
+      frames: this.anims.generateFrameNames('avatar', { start: 31, end: 35, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 15,
+      repeat: 1
+    });
+    this.anims.create({
+      key: 'walkDown',
+      frames: this.anims.generateFrameNames('avatar', { start: 36, end: 52, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 15,
+      repeat: 1
+    });
+    this.anims.create({
+      key: 'runDown',
+      frames: this.anims.generateFrameNames('avatar', { start: 36, end: 52, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 25,
+      repeat: 1
+    });
+    this.anims.create({
+      key: 'walkUp',
+      frames: this.anims.generateFrameNames('avatar', { start: 53, end: 68, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 15,
+      repeat: 1
+    });
+    this.anims.create({
+      key: 'runUp',
+      frames: this.anims.generateFrameNames('avatar', { start: 53, end: 68, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 25,
+      repeat: 1
+    });
+    this.anims.create({
+      key: 'attackUp',
+      frames: this.anims.generateFrameNames('avatar', { start: 69, end: 73, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 15,
+      repeat: 1
+    });
+    this.anims.create({
+      key: 'attackDown',
+      frames: this.anims.generateFrameNames('avatar', { start: 74, end: 79, prefix: 'sprite_', suffix: '.png'}),
+      frameRate: 15,
+      repeat: 1
+    });
   }
 }

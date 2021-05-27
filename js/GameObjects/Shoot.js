@@ -1,6 +1,7 @@
 export default class Shoot extends Phaser.GameObjects.Sprite{
   constructor(scene, x, y, textureKey, key){
     super(scene, x, y, textureKey, key);
+    this.scene.shootGroup.add(this);
 		this.scene.physics.world.enable(this);
 		this.scene.add.existing(this);
 

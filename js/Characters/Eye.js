@@ -1,6 +1,7 @@
 export default class Eye extends Phaser.GameObjects.Sprite{
   constructor(scene, x, y, texture, frame){
     super(scene, x, y, texture, frame);
+    this.scene.enemyGroup.add(this);
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
       this.setOrigin(0.5, 0.5);
@@ -42,5 +43,13 @@ export default class Eye extends Phaser.GameObjects.Sprite{
       this.dir = new Phaser.Math.Vector2(this.dirX , this.dirY);
       this.dir.normalize();
     }
+  }
+
+  invencibleEye()
+  {
+    if (this.DispAct == false)
+		{
+			this.invencible = true;
+		}
   }
 }

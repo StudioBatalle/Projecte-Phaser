@@ -31,23 +31,22 @@ export default class BootScene extends Phaser.Scene {
 		this.bomb = new Bomb(this, 0, 0, 'objectsprites', 'objects_5.png');
 
 		//Creación de enemigos
+    this.enemyGroup = this.add.group();
+    this.shootGroup = this.add.group();
+
 		//Creación de jabalí
 		this.jabali = new Jabali(this, 500, 100, 'jabali', 'sprite_0.png');
-
-		//Creación de ojo y su disparo
-		this.ojo = new Eye(this, 400, 400, 'ojo');
-		this.disparo = new Shoot(this, this.ojo.x, this.ojo.y, 'disparo');
 
 		//Eventos o configuraciones utiles
 		this.Teclas.call(this);
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
-		this.physics.add.overlap(this.player, this.ojo, this.invencibleFunc, null, this);
+		this.physics.add.overlap(this.player, this.Egroup, this.invencibleFunc, null, this);
+		this.physics.add.overlap(this.fire, this.Egroup, this.Dead, null, this);
 		this.physics.add.collider(this.player, this.layer2);
 		this.physics.world.createDebugGraphic();
 		this.music = this.sound.add('music');
 		this.cameras.main.setBounds(0, 0, 800 * 2, 600);
 		this.physics.world.setBounds(0, 0, 800 * 2, 600);
-		//this.player.setCollideWorldBounds(true);
 	}
 
 	update()
@@ -59,31 +58,6 @@ export default class BootScene extends Phaser.Scene {
 
   cronometro()
 	{
-		//Control de los efectos de pocion
-		/*if(this.pocionGreen.EfectoActivo)
-		{
-			this.pocionGreen.timeEfecto++;
-
-			if (this.pocionGreen.timeEfecto == 15)
-			{
-				this.player.damage = this.player.damageMax;
-				this.pocionGreen.timeEfecto = 0;
-				this.pocionGreen.EfectoActivo = false;
-			}
-		}
-
-		if(this.pocionBlue.EfectoActivo)
-		{
-			this.pocionBlue.timeEfecto++;
-
-			if (this.pocionBlue.timeEfecto == 15)
-			{
-				this.player.resistencia = this.player.resistenciaMax;
-				this.pocionBlue.timeEfecto = 0;
-				this.pocionBlue.EfectoActivo = false;
-			}
-		}*/
-
 		//Control del aguante
 		this.player.AguanteControl();
 
@@ -96,32 +70,48 @@ export default class BootScene extends Phaser.Scene {
 		//Control de carrera de jabalí
 		this.jabali.AtaqueJabali();
 
-		//Control de disparo del ojo
-		this.disparo.EyeShoot();
+		if (this.EnemyExist)
+		{
+			//Control de disparo del ojo
+			for (var i = 0; i < this.enemyGroup.getChildren().length; i++)
+			{
+				this.Dgroup = this.shootGroup.getChildren()[i];
+				this.Dgroup.EyeShoot();
+			}
+		}
 	}
 
   Teclas()
 	{
     this.KeyP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
 		this.KeyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O);
+		this.KeyC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
 		this.Key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
 		this.Key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
 		this.Key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 		this.Key4 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
   }
 
-	invencibleFunc()
+	invencibleFunc(player, Egg)
 	{
-		if (this.ojo.DispAct == false)
+		if (this.EnemyExist)
 		{
-			this.ojo.invencible = true;
+			this.Egg.invencibleEye();
+		}
+	}
+
+	Dead(fire, Egg)
+	{
+		if (this.EnemyExist)
+		{
+			Egg.destroy();
 		}
 	}
 }
 
 import Player from "./Characters/Player.js";
 import Jabali from "./Characters/Jabali.js";
-import Eye from "./Characters/eye.js";
+import Eye from "./Characters/Eye.js";
 import Shoot from "./GameObjects/Shoot.js";
 import Bomb from "./GameObjects/Bomb.js";
 import Fire from "./GameObjects/Fire.js";
