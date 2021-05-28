@@ -7,7 +7,7 @@ export default class Shoot extends Phaser.GameObjects.Sprite{
 
     //Propiedades del disparo
     this.vel = 4;
-    this.damageMax = 1;
+    this.damageMax = 3;
 
     this.player = this.scene.player;
     this.ojo = this.scene.ojo;

@@ -51,12 +51,4 @@ export default class Eye extends Phaser.GameObjects.Sprite{
       this.visible = false;
     }
   }
-
-  invencibleEye()
-  {
-    if (this.DispAct == false)
-		{
-			this.playerCerca = true;
-		}
-  }
 }

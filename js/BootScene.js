@@ -19,11 +19,11 @@ export default class BootScene extends Phaser.Scene {
   create()
 	{
 		//Creación del mapa
-		this.mapLast = this.make.tilemap({ key: 'LastRoom'});
-		this.tileset = this.mapLast.addTilesetImage('NatureTileset', 'tiles', 16, 16, 0, 0);
-		this.layer1 = this.mapLast.createLayer('Suelo', this.tileset, 0, 0);
-		this.layer2 = this.mapLast.createLayer('Pared', this.tileset, 0, 0);
-		this.layer2.setCollisionByProperty({ collides: true });
+		const mapLast = this.make.tilemap({ key: 'LastRoom'});
+		const tileset = mapLast.addTilesetImage('NatureTileset', 'tiles', 16, 16, 0, 0);
+		const layer1 = mapLast.createLayer('Suelo', tileset, 0, 0);
+		const layer2 = mapLast.createLayer('Pared', tileset, 0, 0);
+		layer2.setCollisionByProperty({ collides: true });
 
 		//Creación de personaje con sus mecanicas
 		this.fire = new Fire(this, 0, 0, 'fuego');
@@ -47,14 +47,15 @@ export default class BootScene extends Phaser.Scene {
 		//Eventos o configuraciones utiles
 		this.Teclas.call(this);
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
+		this.music = this.sound.add('music');
+		//Collisions
+		this.cameras.main.setBounds(0, 0, 800 * 2, 600 * 2);
+		this.physics.world.setBounds(0, 0, 800 * 2, 600 * 2);
 		this.physics.add.overlap(this.player, this.enemyGroup, this.invencibleFunc, null, this);
 		this.physics.add.overlap(this.player, this.shootGroup, this.DamageDisp, null, this);
 		this.physics.add.overlap(this.fire, this.enemyGroup, this.Dead, null, this);
-		this.physics.add.collider(this.player, this.layer2);
+		this.physics.add.collider(this.player, layer2);
 		this.physics.world.createDebugGraphic();
-		this.music = this.sound.add('music');
-		this.cameras.main.setBounds(0, 0, 800 * 2, 600 * 2);
-		this.physics.world.setBounds(0, 0, 800 * 2, 600 * 2);
 	}
 
 	update()
@@ -99,7 +100,10 @@ export default class BootScene extends Phaser.Scene {
 
 	invencibleFunc(player, Egg)
 	{
-		Egg.invencibleEye();
+		if (Egg.DispAct == false)
+		{
+			Egg.playerCerca = true;
+		}
 	}
 
 	Dead(fire, Egg)
@@ -112,7 +116,11 @@ export default class BootScene extends Phaser.Scene {
 
 	DamageDisp(player, Egg)
 	{
-		player.vida = player.vida - Egg.damageMax;
+		if (player.vida > 0)
+		{
+			var dañoResultante = Egg.damageMax - player.resistencia;
+			player.vida = player.vida - dañoResultante;
+		}
 	}
 }
 

@@ -298,7 +298,7 @@ export default class HUDScene extends Phaser.Scene {
 		{
 			this.pocionGreen.timeEfecto++;
 
-			if (this.pocionGreen.timeEfecto == 15)
+			if (this.pocionGreen.timeEfecto == 10)
 			{
 				this.player.damage = this.player.damageMax;
 				this.pocionGreen.timeEfecto = 0;
@@ -310,7 +310,7 @@ export default class HUDScene extends Phaser.Scene {
 		{
 			this.pocionBlue.timeEfecto++;
 
-			if (this.pocionBlue.timeEfecto == 15)
+			if (this.pocionBlue.timeEfecto == 10)
 			{
 				this.player.resistencia = this.player.resistenciaMax;
 				this.pocionBlue.timeEfecto = 0;
