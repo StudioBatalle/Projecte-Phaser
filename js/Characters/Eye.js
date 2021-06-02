@@ -25,12 +25,37 @@ export default class Eye extends Phaser.GameObjects.Sprite{
 
       this.dir = new Phaser.Math.Vector2(this.dirX , this.dirY);
       this.dir.normalize();
+
+      //Creación de anims de ojo
+      this.anims.create({
+			key: 'idleFront',
+			frames: this.anims.generateFrameNames('ojo', { start: 0, end: 7, prefix: 'eye', suffix: '.png'}),
+			frameRate: 10,
+			repeat: -1
+		  });
+      this.anims.create({
+			key: 'idleBack',
+			frames: this.anims.generateFrameNames('ojo', { start: 8, end: 15, prefix: 'eye', suffix: '.png'}),
+			frameRate: 10,
+			repeat: -1
+		  });
+      this.anims.create({
+			key: 'idleInvencibleFront',
+			frames: this.anims.generateFrameNames('ojo', { start: 16, end: 23, prefix: 'eye', suffix: '.png'}),
+			frameRate: 10,
+			repeat: -1
+		  });
+      this.anims.create({
+			key: 'idleInvencibleBack',
+			frames: this.anims.generateFrameNames('ojo', { start: 23, end: 31, prefix: 'eye', suffix: '.png'}),
+			frameRate: 10,
+			repeat: -1
+		  });
   }
 
   update()
   {
     //Control de movimiento
-
     if (this.playerCerca)
     {
       this.x-= this.vel*this.dir.x;
@@ -44,6 +69,30 @@ export default class Eye extends Phaser.GameObjects.Sprite{
 
       this.dir = new Phaser.Math.Vector2(this.dirX , this.dirY);
       this.dir.normalize();
+    }
+
+    //Anims de ojo
+    if (this.invencible)
+    {
+        if (this.dirY > 0)
+        {
+         this.anims.play("idleInvencibleFront", true);
+        }
+        else
+        {
+          this.anims.play("idleInvencibleBack", true);
+        }
+    }
+    else
+    {
+      if (this.dirY > 0)
+      {
+       this.anims.play("idleFront", true);
+      }
+      else
+      {
+        this.anims.play("idleBack", true);
+      }
     }
 
     if(this.dead)

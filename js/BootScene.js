@@ -5,9 +5,9 @@ export default class BootScene extends Phaser.Scene {
 
   preload()
 	{
-		this.load.image("fuego","assets/images/exp.png");
+		this.load.atlas("fuego", "assets/images/explosion.png", "assets/images/explosion.json");
 		this.load.atlas("objectsprites", "assets/images/objectssheet.png", "assets/images/objectssheet.json");
-		this.load.atlas("ojo","assets/images/eyefrontsheet.png", "assets/images/eyefrontsheet.json");
+		this.load.atlas("ojo","assets/images/eye.png", "assets/images/eye.json");
 		this.load.atlas("jabali","assets/images/jabali.png", "assets/images/jabali.json");
 		this.load.image("disparo","assets/images/Shoot.png");
 		this.load.atlas('avatar', 'assets/images/avatar.png', "assets/images/avatar.json");
@@ -26,7 +26,7 @@ export default class BootScene extends Phaser.Scene {
 		layer2.setCollisionByProperty({ collides: true });
 
 		//Creación de personaje con sus mecanicas
-		this.fire = new Fire(this, 0, 0, 'fuego');
+		this.fire = new Fire(this, 0, 0, 'fuego', 'explosion0.png');
 		this.player = new Player(this, 400, 200, 'avatar', 'sprite_0.png');
 		this.bomb = new Bomb(this, 0, 0, 'objectsprites', 'objects_5.png');
 
@@ -40,7 +40,7 @@ export default class BootScene extends Phaser.Scene {
 		//Creación de ojo y su disparo
 		for (var i = 0; i < 4; i++)
 		{
-			this.ojo = new Eye(this, 150 * (1 + i), 100 * (i + 1), 'ojo');
+			this.ojo = new Eye(this, 150 * (1 + i), 100 * (i + 1), 'ojo', 'eye0.png');
 			this.disparo = new Shoot(this, this.ojo.x, this.ojo.y, 'disparo');
 		}
 
@@ -116,10 +116,11 @@ export default class BootScene extends Phaser.Scene {
 
 	DamageDisp(player, Egg)
 	{
-		if (player.vida > 0)
+		if (player.vida > 0 && Egg.visible == true)
 		{
 			var dañoResultante = Egg.damageMax - player.resistencia;
 			player.vida = player.vida - dañoResultante;
+			Egg.visible = false;
 		}
 	}
 }
