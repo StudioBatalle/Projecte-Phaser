@@ -30,6 +30,8 @@ export default class Player extends Phaser.GameObjects.Sprite{
       this.idle = false;
       this.Atq = false;
 
+
+
       //Anims de avatar
       this.Anims.call(this);
 
@@ -149,7 +151,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
     }
     else if (keys.KeyW.isDown)
     {
-      this.y-=this.velS;
+      this.setVelocityY(+160);
 
       if (this.run)
       {
@@ -165,7 +167,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
     }
     else if (keys.KeyS.isDown)
     {
-      this.y+=this.velS;
+      this.setVelocityY(-160);
 
       if (this.run)
       {

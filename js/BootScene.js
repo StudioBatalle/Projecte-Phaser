@@ -12,24 +12,26 @@ export default class BootScene extends Phaser.Scene {
 		this.load.image("disparo","assets/images/Shoot.png");
 		this.load.atlas('avatar', 'assets/images/avatar.png', "assets/images/avatar.json");
 		this.load.audio('music','assets/sounds/BgMusic.mp3');
-		this.load.tilemapTiledJSON('LastRoom', 'assets/TileMaps/LastRoom.json');
+		this.load.tilemapTiledJSON('LastRoom2', 'assets/TileMaps/LastRoom2.json');
 		this.load.image('tiles', 'assets/TileMaps/NatureTileset.png');
 	}
 
   create()
 	{
 		//Creación del mapa
-		const mapLast = this.make.tilemap({ key: 'LastRoom'});
-		const tileset = mapLast.addTilesetImage('NatureTileset', 'tiles', 16, 16, 0, 0);
-		const layer1 = mapLast.createLayer('Suelo', tileset, 0, 0);
-		const layer2 = mapLast.createLayer('Pared', tileset, 0, 0);
-		layer2.setCollisionByProperty({ collides: true });
+		 this.mapLast = this.make.tilemap({ key: 'LastRoom2'});
+		 this.tileset = this.mapLast.addTilesetImage('NatureTileset', 'tiles', 16, 16, 0, 0);
+	//	const layer1 = mapLast.createLayer('Suelo', tileset, 0, 0);
+		 this.layer2 = this.mapLast.createStaticLayer('pared', this.tileset, 0, 0);
+		this.layer2.setCollisionByProperty({ collides: true });
+		this.layer2.setDepth(0);
+		
 
 		//Creación de personaje con sus mecanicas
 		this.fire = new Fire(this, 0, 0, 'fuego', 'explosion0.png');
 		this.player = new Player(this, 400, 200, 'avatar', 'sprite_0.png');
 		this.bomb = new Bomb(this, 0, 0, 'objectsprites', 'objects_5.png');
-
+this.player.setDepth(2);
 		//Creación de enemigos
     this.enemyGroup = this.add.group();
     this.shootGroup = this.add.group();
@@ -54,7 +56,7 @@ export default class BootScene extends Phaser.Scene {
 		this.physics.add.overlap(this.player, this.enemyGroup, this.invencibleFunc, null, this);
 		this.physics.add.overlap(this.player, this.shootGroup, this.DamageDisp, null, this);
 		this.physics.add.overlap(this.fire, this.enemyGroup, this.Dead, null, this);
-		this.physics.add.collider(this.player, layer2);
+		this.physics.add.collider(this.player, this.layer2);
 		this.physics.world.createDebugGraphic();
 	}
 
