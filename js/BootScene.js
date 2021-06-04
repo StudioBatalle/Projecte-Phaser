@@ -22,16 +22,17 @@ export default class BootScene extends Phaser.Scene {
 		 this.mapLast = this.make.tilemap({ key: 'LastRoom2'});
 		 this.tileset = this.mapLast.addTilesetImage('NatureTileset', 'tiles', 16, 16, 0, 0);
 	//	const layer1 = mapLast.createLayer('Suelo', tileset, 0, 0);
-		 this.layer2 = this.mapLast.createStaticLayer('pared', this.tileset, 0, 0);
+		 this.layer2 = this.mapLast.createLayer('pared', this.tileset, 0, 0);
 		this.layer2.setCollisionByProperty({ collides: true });
 		this.layer2.setDepth(0);
-		
+
 
 		//Creación de personaje con sus mecanicas
-		this.fire = new Fire(this, 0, 0, 'fuego', 'explosion0.png');
+		this.fire = new Fire(this, 0, 0, 'fuego', 'explosion5.png');
 		this.player = new Player(this, 400, 200, 'avatar', 'sprite_0.png');
 		this.bomb = new Bomb(this, 0, 0, 'objectsprites', 'objects_5.png');
-this.player.setDepth(2);
+		this.player.setDepth(2);
+
 		//Creación de enemigos
     this.enemyGroup = this.add.group();
     this.shootGroup = this.add.group();
@@ -50,6 +51,7 @@ this.player.setDepth(2);
 		this.Teclas.call(this);
 		this.time.addEvent({ delay: 1000, callback: this.cronometro, callbackScope: this, loop: true });
 		this.music = this.sound.add('music');
+
 		//Collisions
 		this.cameras.main.setBounds(0, 0, 800 * 2, 600 * 2);
 		this.physics.world.setBounds(0, 0, 800 * 2, 600 * 2);

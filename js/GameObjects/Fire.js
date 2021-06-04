@@ -4,15 +4,15 @@ export default class Fire extends Phaser.GameObjects.Sprite{
 		this.scene.physics.world.enable(this);
 		this.scene.add.existing(this);
       this.setOrigin(0.5, 0.5);
-      this.setScale(3, 3);
+      this.setScale(5, 5);
       this.visible = false;
       this.damage = 15;
-      this.tiempoF = 5;
+      this.tiempoF = 4;
 
       this.anims.create({
 			key: 'exp',
-			frames: this.anims.generateFrameNames('fuego', { start: 0, end: 9, prefix: 'explosion', suffix: '.png'}),
-			frameRate: 4,
+			frames: this.anims.generateFrameNames('fuego', { start: 0, end: 10, prefix: 'explosion', suffix: '.png'}),
+			frameRate: 10,
 			repeat: -1
 		  });
     }
@@ -26,7 +26,7 @@ export default class Fire extends Phaser.GameObjects.Sprite{
 
   			if (this.tiempoF < 0)
   			{
-  				this.tiempoF = 5;
+  				this.tiempoF = 4;
   				this.visible = false;
   			}
   		}

@@ -21,7 +21,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
     	this.damage = this.thisdamageMax;
     	this.aguante = this.aguanteMax;
 
-    	this.vel = 2;
+    	this.vel = 90;
     	this.velS = this.vel;
     	this.recuperacion = false;
     	this.timeRecuperacion = 5;
@@ -29,8 +29,6 @@ export default class Player extends Phaser.GameObjects.Sprite{
       this.dirLast = 1;
       this.idle = false;
       this.Atq = false;
-
-
 
       //Anims de avatar
       this.Anims.call(this);
@@ -51,7 +49,6 @@ export default class Player extends Phaser.GameObjects.Sprite{
     const { keys } = this;
 
     //Control de aguante
-
     switch (this.aguante)
     {
       case 0:
@@ -79,7 +76,6 @@ export default class Player extends Phaser.GameObjects.Sprite{
     }
 
     //idle Anims y Control de ataque
-
     if (keys.KeyM.isDown)
     {
       switch (this.dirLast)
@@ -114,12 +110,12 @@ export default class Player extends Phaser.GameObjects.Sprite{
     }
 
     this.idle = true;
+    this.body.setVelocity(0, 0);
 
     //Control de movimiento
-
     if (keys.KeyA.isDown)
     {
-      this.x-=this.velS;
+      this.body.setVelocityX(-this.velS);
 
       if (this.run)
       {
@@ -135,7 +131,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
     }
     else if (keys.KeyD.isDown)
     {
-      this.x+=this.velS;
+      this.body.setVelocityX(this.velS);
 
       if (this.run)
       {
@@ -151,7 +147,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
     }
     else if (keys.KeyW.isDown)
     {
-      this.setVelocityY(+160);
+      this.body.setVelocityY(-this.velS);
 
       if (this.run)
       {
@@ -167,7 +163,7 @@ export default class Player extends Phaser.GameObjects.Sprite{
     }
     else if (keys.KeyS.isDown)
     {
-      this.setVelocityY(-160);
+      this.body.setVelocityY(this.velS);
 
       if (this.run)
       {
